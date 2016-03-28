@@ -8,7 +8,9 @@
     <artifactId>stockpush</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>push-core</module>
+        <module>push-util</module>
+        <module>push-model</module>
+        <module>push-common</module>
     </modules>
     <packaging>pom</packaging>
 
