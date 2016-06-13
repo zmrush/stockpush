@@ -1,0 +1,22 @@
+package push.message;
+
+message BaseEntity{
+    extensions 100 to max;
+    required string id=1;
+}
+extend BaseEntity{
+    optional Login login=100;
+    optional Message message=101;
+}
+message Login{
+    required int64 uid=1;
+    optional string authToken=2;
+    optional int64 activeTime=3;
+}
+message Message{
+    required int64 to=1;
+    required int64 from=2;
+    required string message=3;
+    optional int64 createAt=4;
+    optional int64 readAt=5;
+}

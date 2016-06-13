@@ -1,10 +1,5 @@
-package push.message;
-
-import org.springframework.data.annotation.Id;
-
 public abstract class BaseEntity {
 
-    @Id
     protected String id;
 
     public String getId() {

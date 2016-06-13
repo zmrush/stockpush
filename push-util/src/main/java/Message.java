@@ -1,6 +1,3 @@
-package push.message;
-
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
