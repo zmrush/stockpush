@@ -1,17 +1,28 @@
 package push.message;
 
+enum Type{
+    LOGIN=0;
+    MESSAGE=1;
+    LOGOUT=2;
+  }
 message BaseEntity{
     extensions 100 to max;
-    required string id=1;
+    optional string id=1;
+    required Type type=2;
 }
 extend BaseEntity{
     optional Login login=100;
     optional Message message=101;
+    optional Logout logout=102;
 }
 message Login{
     required int64 uid=1;
     optional string authToken=2;
     optional int64 activeTime=3;
+}
+message Logout{
+    required int64 uid=1;
+    optional string authToken=2;
 }
 message Message{
     required int64 to=1;

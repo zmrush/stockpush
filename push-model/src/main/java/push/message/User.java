@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigInteger;
 
 @Document
-public class User extends BaseEntity {
+public class User {
     @Indexed(unique = true)
     private long uin;
     @Indexed(unique = true)
