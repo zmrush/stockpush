@@ -110,30 +110,6 @@
         </dependencies>
     </dependencyManagement>
     <repositories>
-        <repository>
-            <id>get_public</id>
-            <name>Repository for default</name>
-            <url>http://maven.caiwu.corp/nexus/content/groups/public/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>get_snapshots</id>
-            <name>Repository for default</name>
-            <url>http://maven.caiwu.corp/nexus/content/repositories/snapshots/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>get_releases</id>
-            <name>Repository for default</name>
-            <url>http://maven.caiwu.corp/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>get_thirdparty</id>
-            <name>Repository for default</name>
-            <url>http://maven.caiwu.corp/nexus/content/repositories/thirdparty/</url>
-            <layout>default</layout>
-        </repository>
     </repositories>
 
 </project>
