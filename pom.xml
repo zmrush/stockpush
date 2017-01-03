@@ -12,6 +12,8 @@
         <module>push-model</module>
         <module>push-common</module>
         <module>push-io</module>
+        <module>push-zookeeper-registry</module>
+        <module>push-registry</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -23,6 +25,7 @@
         <slf4j.api.version>1.7.7</slf4j.api.version>
         <slf4j.log4j12.version>1.7.7</slf4j.log4j12.version>
         <slf4j.jcl.over.slf4j.version>1.7.7</slf4j.jcl.over.slf4j.version>
+        <zookeeper.version>3.4.5</zookeeper.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +100,12 @@
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
