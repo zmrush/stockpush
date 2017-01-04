@@ -1,11 +1,11 @@
 package push.listener;
 
 
-import com.creditease.toumi.dte.registry.listener.LeaderEvent;
-import com.creditease.toumi.dte.registry.listener.LeaderEvent.LeaderEventType;
-import com.creditease.toumi.dte.registry.listener.LeaderListener;
-import com.creditease.toumi.dte.registry.util.PathUtil;
-import com.creditease.toumi.dte.registry.zookeeper.ZKClient;
+import push.listener.LeaderEvent;
+import push.listener.LeaderEvent.LeaderEventType;
+import push.listener.LeaderListener;
+import push.util.PathUtil;
+import push.ZKClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

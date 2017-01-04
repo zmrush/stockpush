@@ -1,10 +1,10 @@
 package push.listener;
 
 
-import com.creditease.toumi.dte.registry.PathData;
-import com.creditease.toumi.dte.registry.listener.ConnectionEvent;
-import com.creditease.toumi.dte.registry.listener.ConnectionListener;
-import com.creditease.toumi.dte.registry.zookeeper.ZKClient;
+import push.PathData;
+import push.listener.ConnectionEvent;
+import push.listener.ConnectionListener;
+import push.ZKClient;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

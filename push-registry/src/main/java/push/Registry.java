@@ -1,8 +1,7 @@
 package push;
 
-import com.creditease.toumi.dte.plugin.ServicePlugin;
-import com.creditease.toumi.dte.registry.listener.*;
-import com.creditease.toumi.dte.util.URL;
+import push.listener.*;
+import push.URL;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * 注册中心接口
  * Created by Eric on 2015/8/1.
  */
-public interface Registry extends ServicePlugin {
+public interface Registry{
     /**
      * 获取URL
      *

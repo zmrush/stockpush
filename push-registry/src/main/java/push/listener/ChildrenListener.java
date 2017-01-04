@@ -1,7 +1,7 @@
 package push.listener;
 
 
-import com.creditease.toumi.dte.util.EventListener;
+import push.EventListener;
 
 /**
  * 孩子监听器，不感知数据变化

@@ -1,7 +1,7 @@
 package push.listener;
 
 
-import com.creditease.toumi.dte.util.EventListener;
+import push.EventListener;
 
 /**
  * 集群选举监听器

@@ -1,7 +1,7 @@
 package push.listener;
 
 
-import com.creditease.toumi.dte.registry.PathData;
+import push.PathData;
 
 import java.util.List;
 

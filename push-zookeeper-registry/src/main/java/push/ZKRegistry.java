@@ -1,11 +1,11 @@
 package push;
 
-import com.creditease.toumi.dte.registry.PathData;
-import com.creditease.toumi.dte.registry.Registry;
-import com.creditease.toumi.dte.registry.RegistryException;
-import com.creditease.toumi.dte.registry.listener.*;
-import com.creditease.toumi.dte.registry.zookeeper.listener.*;
-import com.creditease.toumi.dte.util.URL;
+import push.PathData;
+import push.Registry;
+import push.RegistryException;
+import push.listener.*;
+import push.listener.*;
+import push.URL;
 import org.apache.zookeeper.CreateMode;
 
 import java.util.ArrayList;
@@ -38,7 +38,6 @@ public class ZKRegistry implements Registry {
         this.url = url;
     }
 
-    @Override
     public String getType() {
         return "zookeeper";
     }
@@ -48,7 +47,6 @@ public class ZKRegistry implements Registry {
         return url;
     }
 
-    @Override
     public void setUrl(URL url) {
         this.url = url;
     }
