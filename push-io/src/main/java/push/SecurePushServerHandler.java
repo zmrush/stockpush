@@ -6,11 +6,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import push.message.Entity;
 
 import java.net.InetAddress;
 
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
+    private Logger logger= LoggerFactory.getLogger(SecurePushServerHandler.class);
     private SecurePushServer sps;
     public SecurePushServerHandler(SecurePushServer sps){
         this.sps=sps;
@@ -60,7 +63,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        logger.error("remote client error",cause);
         ctx.close();
     }
 }

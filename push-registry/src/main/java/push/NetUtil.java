@@ -121,7 +121,7 @@ public class NetUtil {
                     if (addr instanceof Inet4Address)
                         ip = addr.getHostAddress();
                 }
-                if ("eth0".equals(e.getDisplayName()))
+                if ("eth0".equals(e.getDisplayName()) || "en4".equals(e.getDisplayName()))
                     break;
             }
         }
