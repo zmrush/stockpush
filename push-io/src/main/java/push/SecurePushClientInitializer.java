@@ -15,16 +15,17 @@ import push.message.Entity;
 public class SecurePushClientInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
+    private SecurePushClient spc;
 
-    public SecurePushClientInitializer(SslContext sslCtx) {
+    public SecurePushClientInitializer(SslContext sslCtx,SecurePushClient spc) {
         this.sslCtx = sslCtx;
+        this.spc=spc;
     }
 
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-
-        pipeline.addLast(sslCtx.newHandler(ch.alloc(), SecurePushClient.HOST, SecurePushClient.PORT));
+        pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
 
         // On top of the SSL handler, add the text line codec.
         //pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));

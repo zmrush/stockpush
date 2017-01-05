@@ -17,9 +17,10 @@ import push.message.Entity;
 public class SecurePushServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
-
-    public SecurePushServerInitializer(SslContext sslCtx) {
+    private SecurePushServer sps;
+    public SecurePushServerInitializer(SslContext sslCtx,SecurePushServer sps) {
         this.sslCtx = sslCtx;
+        this.sps=sps;
     }
 
     @Override
@@ -43,6 +44,6 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast(new ProtobufEncoder());
 
         // and then business logic.
-        pipeline.addLast(new SecurePushServerHandler());
+        pipeline.addLast(new SecurePushServerHandler(sps));
     }
 }

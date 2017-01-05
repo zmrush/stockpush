@@ -88,6 +88,7 @@ public class LiveManager {
         @Override
         public void onEvent(ConnectionEvent event) {
             if (event.getType() == ConnectionEvent.ConnectionEventType.CONNECTED) {
+                //
                 liveEvents.clear();
                 for (PathData data : lives) {
                     liveEvents.offer(data);
@@ -117,14 +118,18 @@ public class LiveManager {
                             try {
                                 zkClient.create(data.getPath(), data.getData(), CreateMode.EPHEMERAL);
                             } catch (Exception e) {
-                                liveEvents.offer(data);
+                                liveEvents.offer(data);  //失败就重试，保证活节点一定创建完成
                                 logger.warn("create live path error." + data.getPath() + ", retry....");
                             }
                         }
                     }
                 } catch (InterruptedException e) {
                     //被中断了则退出
+                    logger.error("live event dispatch interrupt",e);
                     return;
+                } catch (Exception e){
+                    logger.error("live event dispatch encounters problems",e);
+                    return;//遇到其他的问题，我们也退出
                 }
             }
 

@@ -1,10 +1,10 @@
 package push;
 
 
-import com.creditease.toumi.dte.registry.listener.*;
-import com.creditease.toumi.dte.registry.util.PathUtil;
-import com.creditease.toumi.dte.util.EventManager;
-import com.creditease.toumi.dte.util.URL;
+import push.listener.*;
+import push.util.PathUtil;
+import push.EventManager;
+import push.URL;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -48,7 +48,6 @@ public class RegistryMock implements Registry {
         return this.url;
     }
 
-    @Override
     public void setUrl(URL url) {
         this.url = url;
     }
@@ -602,7 +601,6 @@ public class RegistryMock implements Registry {
         }
     }
 
-    @Override
     public String getType() {
         return "mock";
     }

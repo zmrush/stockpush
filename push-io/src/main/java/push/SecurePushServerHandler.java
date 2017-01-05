@@ -13,9 +13,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
-
+    private SecurePushServer sps;
+    public SecurePushServerHandler(SecurePushServer sps){
+        this.sps=sps;
+    }
     //static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    static final Map<Long,ChannelHandlerContext> channels=new ConcurrentHashMap<Long, ChannelHandlerContext>();
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         // Once session is secured, send a greeting and register the channel to the global channel
@@ -44,15 +46,15 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     public void channelRead0(ChannelHandlerContext ctx, Entity.BaseEntity msg) throws Exception {
         if(msg.getType()==Entity.Type.LOGIN){
             Entity.Login login=msg.getExtension(Entity.login);
-            channels.put(login.getUid(),ctx);
+            sps.channels.put(login.getUid(),ctx);
         }else if(msg.getType()==Entity.Type.LOGOUT){
             Entity.Logout logout=msg.getExtension(Entity.logout);
-            channels.remove(logout.getUid());
+            sps.channels.remove(logout.getUid());
             ctx.close();
         }else{
             Entity.Message message=msg.getExtension(Entity.message);
             long to=message.getTo();
-            ChannelHandlerContext toContext=channels.get(to);
+            ChannelHandlerContext toContext=sps.channels.get(to);
             if(toContext!=null)
                 toContext.writeAndFlush(msg);
         }

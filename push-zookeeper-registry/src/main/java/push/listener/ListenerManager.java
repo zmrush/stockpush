@@ -62,25 +62,25 @@ public abstract class ListenerManager<L extends EventListener<E>, E> {
                 }
                 super.publish(event);
             }
+        };
+        eventManager.start();
 
+        updateManager = new EventManager<UpdateType>(){
             @Override
             protected void onIdle() {
                 // 空闲事件，则重新更新一下数据，防止zookeeper丢失事件
                 if (zkClient.isConnected()) {
-                    updateManager.add(UpdateType.UPDATE);
+                    this.add(UpdateType.UPDATE);
                 }
                 super.onIdle();
             }
         };
-        eventManager.start();
-
-
-        updateManager = new EventManager<UpdateType>();
         updateManager.addListener(new UpdateListener());
-        // 随机时间间隔，减少同时访问zookeeper的压力
-        updateManager.setInterval(1000 + (long) (1000 * Math.random()));
+        // 随机时间间隔 我们设置事件分发间隔之间比较小，为100ms，之所以我们觉得能够成功是因为updatemanager只是将事件分发到eventmanager，我们觉得会比较快，不必担心cpu太高
+        updateManager.setInterval(100 + (long) (100 * Math.random()));
         // 随机空闲时间(1分钟-5分钟),触发空闲事件更新数据，防止zookeeper丢失事件
         updateManager.setIdleTime(60 * 1000 + (long) (5 * 60 * 1000 * Math.random()));
+//        updateManager.setIdleTime(1000);
         updateManager.start();
 
         // 注册connection listener

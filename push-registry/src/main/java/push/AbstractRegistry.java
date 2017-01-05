@@ -1,8 +1,8 @@
 package push;
 
 
-import com.creditease.toumi.dte.registry.listener.*;
-import com.creditease.toumi.dte.util.URL;
+import push.listener.*;
+import push.URL;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ public abstract class AbstractRegistry implements Registry {
         return null;
     }
 
-    @Override
     public void setUrl(URL url) {
     }
 
@@ -137,7 +136,6 @@ public abstract class AbstractRegistry implements Registry {
     public void removeListener(ConnectionListener listener) {
     }
 
-    @Override
     public String getType() {
         return null;
     }

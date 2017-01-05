@@ -1,8 +1,8 @@
 package push;
 
 
-import com.creditease.toumi.dte.util.EventListener;
-import com.creditease.toumi.dte.util.EventManager;
+import push.EventListener;
+import push.EventManager;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
