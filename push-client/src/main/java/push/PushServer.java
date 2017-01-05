@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.util.PathUtil;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -37,5 +39,13 @@ public class PushServer {
     }
     public void broadCast(String message){
         sps.broadCast(message);
+    }
+    public static void main(String[] args) throws Exception{
+        Thread.currentThread().sleep(10000);
+        for(;;) {
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+            String ss=br.readLine();
+            sps.broadCast(ss);
+        }
     }
 }

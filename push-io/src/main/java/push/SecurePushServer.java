@@ -41,9 +41,10 @@ public final class SecurePushServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new SecurePushServerInitializer(sslCtx));
+                    .childHandler(new SecurePushServerInitializer(sslCtx,this));
 
-            b.bind(port).sync().channel().closeFuture().sync();
+            //b.bind(port).sync().channel().closeFuture().sync();
+            b.bind(port).sync();
         }catch (Exception e){
             logger.error("secure push server start error",e);
         }
@@ -67,8 +68,12 @@ public final class SecurePushServer {
         builder.setExtension(Entity.message,msgBuilder.build());
         Iterator<Map.Entry<Long,ChannelHandlerContext>> iter=channels.entrySet().iterator();
         while(iter.hasNext()){
-            ChannelHandlerContext chc=iter.next().getValue();
-            chc.writeAndFlush(msgBuilder.build());
+            try {
+                ChannelHandlerContext chc = iter.next().getValue();
+                chc.writeAndFlush(builder.build());
+            }catch (Exception e){
+                logger.error("broad cast error",e);
+            }
         }
     }
     public static void main(String[] args) throws Exception {

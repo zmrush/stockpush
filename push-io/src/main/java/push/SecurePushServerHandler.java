@@ -9,8 +9,6 @@ import io.netty.util.concurrent.GenericFutureListener;
 import push.message.Entity;
 
 import java.net.InetAddress;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
     private SecurePushServer sps;
