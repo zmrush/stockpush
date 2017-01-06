@@ -29,12 +29,22 @@ public class SecurePushClient {
     Bootstrap b;
     ScheduledFuture sf;
     ScheduledExecutorService ses;
-
+    SecurePushClientInitializer spci;
     public SecurePushClient(String host, int port, ScheduledExecutorService ses,Long uid){
         this.host=host;
         this.port=port;
         this.ses=ses;
         this.uid=uid;
+        try {
+            final SslContext sslCtx = SslContextBuilder.forClient()
+                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+            spci = new SecurePushClientInitializer(sslCtx, this);
+        }catch (Exception e){
+
+        }
+    }
+    public void addListener(MessageListener messageListener){
+        spci.addListener(messageListener);
     }
     public void start(){
         sf=ses.scheduleAtFixedRate(new ConnectionTask(this),0,5000, TimeUnit.MILLISECONDS);
@@ -58,11 +68,10 @@ public class SecurePushClient {
         }
         public void connect() throws Exception{
             if(b==null) {
-                final SslContext sslCtx = SslContextBuilder.forClient()
-                        .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+
                 group = new NioEventLoopGroup();
                 b = new Bootstrap();
-                b.group(group).channel(NioSocketChannel.class).handler(new SecurePushClientInitializer(sslCtx,spc));
+                b.group(group).channel(NioSocketChannel.class).handler(spci);
                 // Start the connection attempt.
             }
             ch = b.connect(host, port).sync().channel();

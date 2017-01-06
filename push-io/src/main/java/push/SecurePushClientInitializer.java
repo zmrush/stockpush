@@ -12,14 +12,20 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 import push.message.Entity;
 
+import javax.sql.ConnectionEventListener;
+
 public class SecurePushClientInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
     private SecurePushClient spc;
-
+    private  EventManager<MessageEvent> eventManager=new EventManager<MessageEvent>();
     public SecurePushClientInitializer(SslContext sslCtx,SecurePushClient spc) {
         this.sslCtx = sslCtx;
         this.spc=spc;
+        eventManager.start();
+    }
+    public void addListener(MessageListener messageListener){
+        eventManager.addListener(messageListener);
     }
 
     @Override
@@ -36,6 +42,6 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         Entity.registerAllExtensions(registry);
         pipeline.addLast(new ProtobufDecoder(Entity.BaseEntity.getDefaultInstance(),registry));
         // and then business logic.
-        pipeline.addLast(new SecurePushClientHandler());
+        pipeline.addLast(new SecurePushClientHandler(eventManager));
     }
 }

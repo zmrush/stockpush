@@ -14,7 +14,8 @@
         <module>push-io</module>
         <module>push-zookeeper-registry</module>
         <module>push-registry</module>
-        <module>push-client</module>
+        <module>push-middle</module>
+        <module>push-user</module>
     </modules>
     <packaging>pom</packaging>
 

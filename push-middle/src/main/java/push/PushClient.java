@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.listener.ChildrenEvent;
 import push.listener.ChildrenListener;
+import push.message.Entity;
 import push.util.PathUtil;
 
 import java.io.InputStream;
@@ -86,12 +87,23 @@ public class PushClient {
                     ClientIndex ci=new ClientIndex(s[0],Integer.valueOf(s[1]));
                     if(connectedClients.get(ci)==null){
                         SecurePushClient spc=new SecurePushClient(s[0],Integer.valueOf(s[1]),ses,uid);
+                        spc.addListener(new DefaultMessageListener());
                         connectedClients.put(ci,spc);
                         spc.start();
+
                     }
                 }
             } finally {
                 mutex.unlock();
+            }
+        }
+    }
+    public static class DefaultMessageListener implements MessageListener{
+
+        public void onEvent(MessageEvent event) {
+            if(event.getMessageEventType()== MessageEvent.MessageEventType.MESSAGE_RECEIVE){
+                Entity.Message message=event.getMessage().getExtension(Entity.message);
+                System.out.println(message.getFrom()+">"+message.getMessage());
             }
         }
     }

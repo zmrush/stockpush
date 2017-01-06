@@ -17,6 +17,7 @@ import push.message.Entity;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SecurePushServer {
@@ -24,7 +25,7 @@ public final class SecurePushServer {
     static int port;
     public EventLoopGroup bossGroup;
     public EventLoopGroup workerGroup;
-    public static final Map<Long,ChannelHandlerContext> channels=new ConcurrentHashMap<Long, ChannelHandlerContext>();
+    SecurePushServerInitializer spsi;
 
     public SecurePushServer(int port){
         this.port=port;
@@ -38,13 +39,15 @@ public final class SecurePushServer {
         workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
+            spsi=new SecurePushServerInitializer(sslCtx);
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new SecurePushServerInitializer(sslCtx,this));
+                    .childHandler(spsi);
 
             //b.bind(port).sync().channel().closeFuture().sync();
             b.bind(port).sync();
+            //this.addListener(new DefaultConnectionListener());
         }catch (Exception e){
             logger.error("secure push server start error",e);
         }
@@ -57,24 +60,8 @@ public final class SecurePushServer {
 
         }
     }
-    public void broadCast(String message){
-
-        Entity.Message.Builder msgBuilder=Entity.Message.newBuilder();
-        msgBuilder.setMessage(message);
-        msgBuilder.setFrom(0);
-        msgBuilder.setTo(0);
-        Entity.BaseEntity.Builder builder=Entity.BaseEntity.newBuilder();
-        builder.setType(Entity.Type.MESSAGE);
-        builder.setExtension(Entity.message,msgBuilder.build());
-        Iterator<Map.Entry<Long,ChannelHandlerContext>> iter=channels.entrySet().iterator();
-        while(iter.hasNext()){
-            try {
-                ChannelHandlerContext chc = iter.next().getValue();
-                chc.writeAndFlush(builder.build());
-            }catch (Exception e){
-                logger.error("broad cast error",e);
-            }
-        }
+    public void addListener(ConnectionListener connectionListener){
+        spsi.addListener(connectionListener);
     }
     public static void main(String[] args) throws Exception {
 //        SelfSignedCertificate ssc = new SelfSignedCertificate();

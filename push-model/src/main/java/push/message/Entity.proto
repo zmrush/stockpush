@@ -4,6 +4,7 @@ enum Type{
     LOGIN=0;
     MESSAGE=1;
     LOGOUT=2;
+    PING=3;
   }
 message BaseEntity{
     extensions 100 to max;
@@ -14,6 +15,7 @@ extend BaseEntity{
     optional Login login=100;
     optional Message message=101;
     optional Logout logout=102;
+    optional Ping ping=103;
 }
 message Login{
     required int64 uid=1;
@@ -30,4 +32,7 @@ message Message{
     required string message=3;
     optional int64 createAt=4;
     optional int64 readAt=5;
+}
+message Ping{
+   required string message=1;
 }
