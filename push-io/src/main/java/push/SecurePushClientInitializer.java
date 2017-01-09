@@ -10,9 +10,11 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.timeout.IdleStateHandler;
 import push.message.Entity;
 
 import javax.sql.ConnectionEventListener;
+import java.util.concurrent.TimeUnit;
 
 public class SecurePushClientInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -31,6 +33,8 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
+        int rd=(int)(10*Math.random());
+        pipeline.addLast("timeout", new IdleStateHandler(200, 180, 180+rd, TimeUnit.SECONDS));
         pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
 
         // On top of the SSL handler, add the text line codec.

@@ -3,6 +3,7 @@ package push;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -41,6 +42,7 @@ public final class SecurePushServer {
             ServerBootstrap b = new ServerBootstrap();
             spsi=new SecurePushServerInitializer(sslCtx);
             b.group(bossGroup, workerGroup)
+                    .option(ChannelOption.TCP_NODELAY,true)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(spsi);

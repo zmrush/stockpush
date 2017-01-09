@@ -36,8 +36,8 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         // and server in the real world.
         pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         //180秒的心跳检测，200秒之类必须受到回复,加上一定的随机性
-        int rd=(int)(10*Math.random());
-        pipeline.addLast("timeout", new IdleStateHandler(200+rd, 180, 180+rd, TimeUnit.SECONDS));
+        //int rd=(int)(10*Math.random());
+        pipeline.addLast("timeout", new IdleStateHandler(200, 180, 180, TimeUnit.SECONDS));
         // On top of the SSL handler, add the text line codec.
         ExtensionRegistry registry = ExtensionRegistry.newInstance();
         Entity.registerAllExtensions(registry);

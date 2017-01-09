@@ -15,7 +15,7 @@ import push.message.Entity;
 import java.net.InetAddress;
 
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
-    private Logger logger= LoggerFactory.getLogger(SecurePushServerHandler.class);
+    private static Logger logger= LoggerFactory.getLogger(SecurePushServerHandler.class);
     private  final EventManager<ConnectionEvent> eventManager;
     public SecurePushServerHandler(EventManager eventManager){
         this.eventManager=eventManager;
@@ -25,6 +25,27 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
 //        ctx.channel().close();
 //    }
     //static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final Entity.BaseEntity welcomeEntity;
+    private static final Entity.BaseEntity pingReplyEntity;
+    static {
+            String msg = "Welcome to  secure chat service!\n";
+            Entity.Message.Builder msgBuilder = Entity.Message.newBuilder();
+            msgBuilder.setMessage(msg);
+            msgBuilder.setFrom(0);
+            msgBuilder.setTo(0);
+            Entity.BaseEntity.Builder builder = Entity.BaseEntity.newBuilder();
+            builder.setType(Entity.Type.MESSAGE);
+            builder.setExtension(Entity.message, msgBuilder.build());
+            welcomeEntity = builder.build();
+
+
+            Entity.Ping.Builder ping = Entity.Ping.newBuilder();
+            ping.setMessage("ok");
+            Entity.BaseEntity.Builder base = Entity.BaseEntity.newBuilder();
+            base.setType(Entity.Type.PING);
+            base.setExtension(Entity.ping, ping.build());
+            pingReplyEntity = base.build();
+    }
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         // Once session is secured, send a greeting and register the channel to the global channel
@@ -33,18 +54,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
                 new GenericFutureListener<Future<Channel>>() {
                     @Override
                     public void operationComplete(Future<Channel> future) throws Exception {
-                        String msg="Welcome to " + InetAddress.getLocalHost().getHostName() + " secure chat service!\n";
-                        msg+="Your session is protected by " +
-                                        ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
-                                        " cipher suite.\n";
-                        Entity.Message.Builder msgBuilder=Entity.Message.newBuilder();
-                        msgBuilder.setMessage(msg);
-                        msgBuilder.setFrom(0);
-                        msgBuilder.setTo(0);
-                        Entity.BaseEntity.Builder builder=Entity.BaseEntity.newBuilder();
-                        builder.setType(Entity.Type.MESSAGE);
-                        builder.setExtension(Entity.message,msgBuilder.build());
-                        ctx.writeAndFlush(builder.build()).sync();
+                        ctx.writeAndFlush(welcomeEntity).sync();
                     }
         });
     }
@@ -53,6 +63,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     public void channelRead0(ChannelHandlerContext ctx, Entity.BaseEntity msg) throws Exception {
         if(msg.getType()==Entity.Type.PING){
             //这段代码只是为了提前结束判断
+            ctx.writeAndFlush(pingReplyEntity);
         }
         else if(msg.getType()==Entity.Type.LOGIN){
             Entity.Login login=msg.getExtension(Entity.login);
@@ -102,21 +113,20 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
             IdleStateEvent event = (IdleStateEvent) evt;
             if (event.state().equals(IdleState.READER_IDLE)) {
                 logger.error("READER_IDLE");
-                // 超时关闭channel
                 ctx.close();
             } else if (event.state().equals(IdleState.WRITER_IDLE)) {
-                logger.error("WRITER_IDLE");
+                //logger.error("WRITER_IDLE");
             } else if (event.state().equals(IdleState.ALL_IDLE)) {
-                logger.error("ALL_IDLE");
+                //logger.error("ALL_IDLE");
                 // 发送心跳
                 //这段代码可以提出去啊
-                Entity.Ping.Builder ping=Entity.Ping.newBuilder();
-                ping.setMessage("ping");
-                Entity.BaseEntity.Builder base=Entity.BaseEntity.newBuilder();
-                base.setType(Entity.Type.PING);
-                base.setExtension(Entity.ping,ping.build());
-                //ctx.channel().write(base.build());
-                ctx.writeAndFlush(base.build());
+//                Entity.Ping.Builder ping=Entity.Ping.newBuilder();
+//                ping.setMessage("ping");
+//                Entity.BaseEntity.Builder base=Entity.BaseEntity.newBuilder();
+//                base.setType(Entity.Type.PING);
+//                base.setExtension(Entity.ping,ping.build());
+//                //ctx.channel().write(base.build());
+//                ctx.writeAndFlush(base.build());
             }
         }
         super.userEventTriggered(ctx, evt);
