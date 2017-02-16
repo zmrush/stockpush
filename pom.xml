@@ -16,6 +16,8 @@
         <module>push-registry</module>
         <module>push-middle</module>
         <module>push-user</module>
+        <module>push-bottom</module>
+        <module>push-datasource</module>
     </modules>
     <packaging>pom</packaging>
 

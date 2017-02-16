@@ -18,17 +18,17 @@ extend BaseEntity{
     optional Ping ping=103;
 }
 message Login{
-    required int64 uid=1;
+    required string uid=1;
     optional string authToken=2;
     optional int64 activeTime=3;
 }
 message Logout{
-    required int64 uid=1;
+    required string uid=1;
     optional string authToken=2;
 }
 message Message{
-    required int64 to=1;
-    required int64 from=2;
+    required string to=1;
+    required string from=2;
     required string message=3;
     optional int64 createAt=4;
     optional int64 readAt=5;

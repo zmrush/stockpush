@@ -1,0 +1,39 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- property place holder -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:important.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="dsConfig" class="push.datasource.DataSourceConfig">
+        <property name="type" value="HikariCP"/>
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="jdbc:mysql://10.100.141.39:3306/tm_dte"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="${jdbc.maxActive}"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <property name="connectionTimeout" value="${jdbc.maxWait}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="connectionProperties" value="${jdbc.connectionProperties}"/>
+    </bean>
+
+
+    <bean id="dataSource" class="push.datasource.DataSourceFactory"
+          factory-method="build" destroy-method="destroy">
+        <constructor-arg ref="dsConfig"/>
+    </bean>
+
+
+    <bean id="userDao" class="push.bottom.dao.UserDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+</beans>
