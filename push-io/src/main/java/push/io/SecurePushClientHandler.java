@@ -53,12 +53,12 @@ public class SecurePushClientHandler extends SimpleChannelInboundHandler<Entity.
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
             if (event.state().equals(IdleState.READER_IDLE)) {
-                logger.error("READ_IDLE");
+                logger.debug("READ_IDLE");
                 ctx.close();
             } else if (event.state().equals(IdleState.WRITER_IDLE)) {
-                logger.error("WRITER_IDLE");
+                logger.debug("WRITER_IDLE");
             } else if (event.state().equals(IdleState.ALL_IDLE)) {
-                logger.error("ALL_IDLE");
+                logger.debug("ALL_IDLE");
                 // 发送心跳
                 ctx.writeAndFlush(pingEntity);
             }

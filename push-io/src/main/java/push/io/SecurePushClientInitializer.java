@@ -32,7 +32,6 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         //把这个放到这个上面，而不是channel initialize的时候再初始化，会比较慢
         registry=ExtensionRegistry.newInstance();
         Entity.registerAllExtensions(registry);
-        logger.error("secure push client initialized");
     }
     public void addListener(MessageListener messageListener){
         eventManager.addListener(messageListener);
@@ -41,10 +40,9 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        int rd=(int)(10*Math.random());
-        logger.error("rd is "+rd);
-        pipeline.addLast("timeout", new IdleStateHandler(200, 180, 180+rd, TimeUnit.SECONDS));
-        //pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
+        int rd=(int)(30*Math.random());
+        pipeline.addLast("timeout", new IdleStateHandler(200, 180, 150+rd, TimeUnit.SECONDS));
+        pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
 
         // On top of the SSL handler, add the text line codec.
         //pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));

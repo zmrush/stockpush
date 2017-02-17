@@ -34,15 +34,14 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
 
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
-        logger.error("receive connect and initialize channel");
+        logger.debug("receive connect and initialize channel");
         ChannelPipeline pipeline = ch.pipeline();
-
         // Add SSL handler first to encrypt and decrypt everything.
         // In this example, we use a bogus certificate in the server side
         // and accept any invalid certificates in the client side.
         // You will need something more complicated to identify both
         // and server in the real world.
-        //pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+        pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         //180秒的心跳检测，200秒之类必须受到回复,加上一定的随机性
         //int rd=(int)(10*Math.random());
         pipeline.addLast("timeout", new IdleStateHandler(200, 180, 180, TimeUnit.SECONDS));

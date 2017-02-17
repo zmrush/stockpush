@@ -33,7 +33,7 @@ public class PushClient {
     public static class BottomClientMessageListener implements MessageListener{
         public void onEvent(MessageEvent event) {
             Entity.Message message=event.getMessage().getExtension(Entity.message);
-            logger.error(System.currentTimeMillis()+":"+message.getCreateAt()+":"+message.getMessage());
+            logger.info(System.currentTimeMillis()+":"+message.getCreateAt()+":"+message.getMessage());
         }
     }
     public PushClient(String host,int port,String uid,String password){
@@ -42,26 +42,27 @@ public class PushClient {
         securePushClient.start();
         securePushClient.addListener(new BottomClientMessageListener());
     }
-    public void sendData(String message){
+    public void sendData(String message) throws Exception{
         securePushClient.sendData(uid,"0",message);
     }
-//    public static void main(String[] args) throws Exception{
-//        for(int i=0;i<1;i++) {
-//            PushClient pushClient = new PushClient("10.10.104.103", 9988, String.valueOf(i), "123456");
-//        }
-//        Thread.currentThread().sleep(10000000);
-//    }
     public static void main(String[] args) throws Exception{
-        PushClient pushClient=new PushClient("10.10.104.103", 9988, String.valueOf(0), "123456");
-        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
-        String line;
-        while((line=bufferedInputStream.readLine())!=null){
-            Registration registration = new Registration();
-            registration.setType("1");
-            String[] strings=line.split(" ");
-            registration.setUsername(strings[0]);
-            registration.setPassword(strings[1]);
-            pushClient.sendData(JSON.toJSONString(registration));
+        for(int i=0;i<300;i++) {
+            PushClient pushClient = new PushClient("10.10.104.103", 9988, String.valueOf(i), "123456");
+            //PushClient pushClient = new PushClient("10.100.138.174", 9988, String.valueOf(i), "123456");
         }
+        Thread.currentThread().sleep(10000000);
     }
+//    public static void main(String[] args) throws Exception{
+//        PushClient pushClient=new PushClient("10.10.104.103", 9988, String.valueOf(0), "123456");
+//        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
+//        String line;
+//        while((line=bufferedInputStream.readLine())!=null){
+//            Registration registration = new Registration();
+//            registration.setType("1");
+//            String[] strings=line.split(" ");
+//            registration.setUsername(strings[0]);
+//            registration.setPassword(strings[1]);
+//            pushClient.sendData(JSON.toJSONString(registration));
+//        }
+//    }
 }

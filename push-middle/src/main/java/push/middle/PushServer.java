@@ -24,9 +24,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class PushServer {
     private static Logger logger= LoggerFactory.getLogger(PushServer.class);
-    private static SecurePushServer sps;
+    private  SecurePushServer sps;
     static {
-        try {
+    }
+    public PushServer(){
+    }
+    public void start() throws Exception{
+        try{
             InputStream is=PushClient.class.getClassLoader().getResourceAsStream("push.properties");
             Properties properties=new Properties();
             properties.load(is);
@@ -46,11 +50,12 @@ public class PushServer {
             zkRegistry.open();
             zkRegistry.createLive(PathUtil.makePath(root, "live", nodeName), null);
         }catch (Exception e){
-            logger.error("push server initialize error",e);
+            logger.error("push server start error",e);
+            throw e;
         }
     }
 
-    public static void  broadCast(String message){
+    public void  broadCast(String message) throws Exception{
         Entity.Message.Builder msgBuilder=Entity.Message.newBuilder();
         msgBuilder.setMessage(message);
         msgBuilder.setFrom("0");
@@ -67,11 +72,12 @@ public class PushServer {
                 chc.writeAndFlush(baseEntity);
             }catch (Exception e){
                 logger.error("broad cast error",e);
+                throw new RuntimeException("broad cast error",e);
             }
         }
     }
-    public static final CopyOnWriteArraySet<ChannelHandlerContext> channels=new CopyOnWriteArraySet<ChannelHandlerContext>();
-    public static class DefaultConnectionListener implements ConnectionListener {
+    public final CopyOnWriteArraySet<ChannelHandlerContext> channels=new CopyOnWriteArraySet<ChannelHandlerContext>();
+    public class DefaultConnectionListener implements ConnectionListener {
         public void onEvent(ConnectionEvent event) {
             if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_ADD){
                 channels.add(event.getChc());
@@ -83,11 +89,13 @@ public class PushServer {
         }
     }
     public static void main(String[] args) throws Exception{
+        PushServer pushServer=new PushServer();
+        pushServer.start();
         Thread.currentThread().sleep(10000);
         for(;;) {
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
             String ss=br.readLine();
-            broadCast(ss);
+            pushServer.broadCast(ss);
         }
     }
 }
