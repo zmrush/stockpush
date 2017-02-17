@@ -25,11 +25,21 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class PushClient {
     private static Logger logger= LoggerFactory.getLogger(PushClient.class);
-    private static String uid;
-    private static String password;
+    private String uid;
+    private String password;
     private static EventManager<MessageEvent> messageEventEventManager=new EventManager<MessageEvent>("push-middle-client-manager");
     static{
         try {
+
+        }catch (Exception e){
+
+        }
+    }
+    public PushClient(){
+
+    }
+    public void start() throws Exception{
+        try{
             InputStream is=PushClient.class.getClassLoader().getResourceAsStream("push.properties");
             Properties properties=new Properties();
             properties.load(is);
@@ -42,10 +52,11 @@ public class PushClient {
             zkRegistry.addListener(PathUtil.makePath(root, "live"),new ExecutorLiveListener());
             messageEventEventManager.start();
         }catch (Exception e){
-            logger.error("push client initialize error",e);
+            logger.error("push client start error",e);
+            throw new RuntimeException("push client start error",e);
         }
     }
-    public static class ClientIndex{
+    public class ClientIndex{
         private String host;
         private int port;
         public ClientIndex(String host,int port){
@@ -65,17 +76,17 @@ public class PushClient {
             return false;
         }
     }
-    private static Map<ClientIndex,SecurePushClient> connectedClients=new HashMap<ClientIndex,SecurePushClient>();
-    private static ReentrantLock mutex=new ReentrantLock();
-    private static Set<String> lives=new HashSet<String>();
-    public static ScheduledExecutorService ses=new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+    private Map<ClientIndex,SecurePushClient> connectedClients=new HashMap<ClientIndex,SecurePushClient>();
+    private ReentrantLock mutex=new ReentrantLock();
+    private Set<String> lives=new HashSet<String>();
+    public ScheduledExecutorService ses=new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
         public Thread newThread(Runnable r) {
             Thread thread=new Thread(r,"Connect");
             thread.setDaemon(true);
             return thread;
         }
     });
-    public static class ExecutorLiveListener implements ChildrenListener {
+    public class ExecutorLiveListener implements ChildrenListener {
         @Override
         public void onEvent(ChildrenEvent event) {
             // 当新开启了服务器或者服务器宕机了重新分配
@@ -107,7 +118,7 @@ public class PushClient {
             }
         }
     }
-    public static class DefaultMessageListener implements MessageListener {
+    public class DefaultMessageListener implements MessageListener {
 
         public void onEvent(MessageEvent event) {
             if(event.getMessageEventType()== MessageEvent.MessageEventType.MESSAGE_RECEIVE){
@@ -126,13 +137,15 @@ public class PushClient {
             }
         }
     }
-    public static void addMesageListener(MessageListener messageListener){
+    public void addMesageListener(MessageListener messageListener){
         messageEventEventManager.addListener(messageListener);
     }
     public static void main(String[] args) throws Exception{
+        PushClient pushClient=new PushClient();
+        pushClient.start();
         Thread.currentThread().sleep(10000);
 //        System.out.println("start");
-        addMesageListener(new PrintMessageListener());
+        pushClient.addMesageListener(new PrintMessageListener());
         Thread.currentThread().sleep(2000000000);
 
     }

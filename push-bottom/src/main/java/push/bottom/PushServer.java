@@ -17,6 +17,8 @@ import push.bottom.model.User;
 import push.io.*;
 import push.message.AbstractMessage;
 import push.message.Entity;
+import push.middle.*;
+import push.middle.PushClient;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;
@@ -30,6 +32,8 @@ import java.util.concurrent.Executors;
  */
 public class PushServer {
     private static Logger logger= LoggerFactory.getLogger(PushServer.class);
+
+    push.middle.PushClient pushClient;
     //-----------------------------------------------------------------------
     //账户数据库操作
     private UserDao userDao;
@@ -121,11 +125,12 @@ public class PushServer {
                 String username=login.getUid();
                 String password=login.getAuthToken();
                 try {
-                    User user=userDao.findByUserInfo(username,password);
-                    if(user!=null)
-                        clients.put(event.getUid(),event.getChc());
-                    else
-                        event.getChc().close();
+                    clients.put(event.getUid(),event.getChc());
+//                    User user=userDao.findByUserInfo(username,password);
+//                    if(user!=null)
+//                        clients.put(event.getUid(),event.getChc());
+//                    else
+//                        event.getChc().close();
                 }catch (Exception e){
                     event.getChc().close();
                 }
@@ -215,17 +220,22 @@ public class PushServer {
         RingBuffer<MessageEvent> middleRingbuffer=middleDisruptor.getRingBuffer();
         messageEventProducer=new MessageEventProducer(middleRingbuffer);
         //--------------------------------------------------------------
+        pushClient=new PushClient();
+
+
     }
-    public void start(){
+    public void start() throws Exception{
         try {
             //监听客户端
             SecurePushServer securePushServer = new SecurePushServer(port);
             securePushServer.start();
             securePushServer.addListener(new BottomConnectionListener());
             //监听上层middle发过来的消息
-            push.middle.PushClient.addMesageListener(new BottomMessageLitener());
+            pushClient.start();
+            pushClient.addMesageListener(new BottomMessageLitener());
         }catch (Exception e){
             logger.error("push server start error",e);
+            throw new RuntimeException("push server start error",e);
         }
     }
 

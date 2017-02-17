@@ -44,6 +44,7 @@ public final class SecurePushServer {
             //this.addListener(new DefaultConnectionListener());
         }catch (Exception e){
             logger.error("secure push server start error",e);
+            throw new RuntimeException("secure push server start error",e);
         }
     }
     public void stop(){
@@ -51,7 +52,7 @@ public final class SecurePushServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }catch (Exception e){
-
+            logger.error("stop secure server error",e);
         }
     }
     public void addListener(ConnectionListener connectionListener){

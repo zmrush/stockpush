@@ -45,9 +45,10 @@ public class SecurePushClient {
                     .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
             spci = new SecurePushClientInitializer(sslCtx, this);
         }catch (Exception e){
-
+            logger.error("start error",e);
+            throw new RuntimeException("client start error",e);
         }
-        sf=ses.scheduleAtFixedRate(new ConnectionTask(this),0,5000, TimeUnit.MILLISECONDS);
+        sf=ses.scheduleAtFixedRate(new ConnectionTask(this),0,10000, TimeUnit.MILLISECONDS);
     }
     public class ConnectionTask implements Runnable{
         public SecurePushClient spc;
@@ -57,11 +58,12 @@ public class SecurePushClient {
         public void run(){
             try{
                 if(ch==null || ch.isActive()==false){
-                    logger.error("start to connect");
+                    logger.info("start to connect");
                     connect();
                 }
             }catch (InterruptedException ie){
                 logger.error("connect task interrupt",ie);
+                return;
             }
             catch (Exception e){
                 logger.error("connect task error",e);
@@ -79,7 +81,7 @@ public class SecurePushClient {
             login();
         }
     }
-    public void sendData(String from,String to,String message){
+    public void sendData(String from,String to,String message) throws Exception{
         Entity.BaseEntity.Builder builder2 = Entity.BaseEntity.newBuilder();
         builder2.setType(Entity.Type.MESSAGE);
         Entity.Message.Builder msgBuilder = Entity.Message.newBuilder();
@@ -88,15 +90,10 @@ public class SecurePushClient {
         msgBuilder.setMessage(message);
         builder2.setExtension(Entity.message,msgBuilder.build());
         ChannelFuture f = ch.writeAndFlush(builder2.build());
-        try {
-            if (f != null)
-                f.sync();
-        } catch (Throwable throwable) {
-            logger.error("login error",throwable);
-            throw new RuntimeException("login error", throwable);
-        }
+        if (f != null)
+            f.sync();
     }
-    public void login(){
+    public void login() throws Exception{
         Entity.Login.Builder login = Entity.Login.newBuilder();
         login.setUid(uid);
         login.setAuthToken(password);
@@ -104,13 +101,8 @@ public class SecurePushClient {
         builder.setType(Entity.Type.LOGIN);
         builder.setExtension(Entity.login, login.build());
         ChannelFuture f = ch.writeAndFlush(builder.build());
-        try {
-            if (f != null)
-                f.sync();
-        } catch (Throwable throwable) {
-            logger.error("login error",throwable);
-            throw new RuntimeException("login error", throwable);
-        }
+        if (f != null)
+            f.sync();
     }
     public void stop(){
         sf.cancel(true);

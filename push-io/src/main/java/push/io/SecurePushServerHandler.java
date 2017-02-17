@@ -43,6 +43,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     }
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
+        logger.debug("receive connect and channle is active now:"+ctx.name());
         // Once session is secured, send a greeting and register the channel to the global channel
         // list so the channel received the messages from others.
 //        ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
@@ -59,6 +60,16 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
         if(msg.getType()==Entity.Type.PING){
             //这段代码只是为了提前结束判断
             ctx.writeAndFlush(pingReplyEntity);
+        }else if(msg.getType()==Entity.Type.MESSAGE){
+            Entity.Message message=msg.getExtension(Entity.message);
+//            long to=message.getTo();
+//            ChannelHandlerContext toContext=sps.channels.get(to);
+//            if(toContext!=null)
+//                toContext.writeAndFlush(msg);
+            ConnectionEvent ce=new ConnectionEvent();
+            ce.setCet(ConnectionEvent.ConnectionEventType.MESSAGE_TRANSFER);
+            ce.setMessage(msg);
+            eventManager.add(ce);
         }
         else if(msg.getType()==Entity.Type.LOGIN){
             Entity.Login login=msg.getExtension(Entity.login);
@@ -78,16 +89,8 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
             eventManager.add(ce);
             //sps.channels.remove(logout.getUid());
             //ctx.close();
-        }else if(msg.getType()==Entity.Type.MESSAGE){
-            Entity.Message message=msg.getExtension(Entity.message);
-//            long to=message.getTo();
-//            ChannelHandlerContext toContext=sps.channels.get(to);
-//            if(toContext!=null)
-//                toContext.writeAndFlush(msg);
-            ConnectionEvent ce=new ConnectionEvent();
-            ce.setCet(ConnectionEvent.ConnectionEventType.MESSAGE_TRANSFER);
-            ce.setMessage(msg);
-            eventManager.add(ce);
+        }else {
+            logger.error("receive message that cannot be parsed:"+msg.toString());
         }
     }
 

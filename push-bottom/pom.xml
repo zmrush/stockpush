@@ -17,6 +17,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
             <groupId>rush</groupId>
             <artifactId>push-io</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -78,27 +88,116 @@
 
 
     <build>
+        <!--this will assure the original variable be replsced correctlly-->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <!-- the orignal jar will not contain the following files which has no use -->
+                <configuration>
+                    <excludes>
+                        <exclude>*.xml</exclude>
+                        <exclude>*.properties</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!--因为我们要使用上面的配置文件，所以我们使用这种打包方式会比较好-->
+            <!--plugin will assure variable in resources will be replaced  correctlly in the final conf directory -->
+            <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.4</version>
+            <dependencies>
+            <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>2.2.1</version>
+            <exclusions>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-file</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-provider-api</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-http-lightweight</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-http-shared</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-provider-api</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-http</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-webdav-jackrabbit</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ssh-external</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ssh</artifactId>
+            </exclusion>
+            <exclusion>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-api</artifactId>
+            </exclusion>
+            </exclusions>
+            </dependency>
+            </dependencies>
+            <configuration>
+            <!-- not append assembly id in release file name -->
+            <finalName>toumi.push</finalName>
+            <appendAssemblyId>false</appendAssemblyId>
+            <descriptors>
+            <descriptor>src/main/assemble/package.xml</descriptor>
+            </descriptors>
+            </configuration>
+            <executions>
+            <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+            <goal>single</goal>
+            </goals>
+            </execution>
+            </executions>
+            </plugin>
+        </plugins>
     </build>
 
+
     <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <jdbc_url><![CDATA[jdbc:mysql://10.100.141.39:3306/tm_dte]]></jdbc_url>
-                <jdbc_maxActive>20</jdbc_maxActive>
-                <jdbc_username>tm_dte</jdbc_username>
-                <jdbc_password>tm_dte123</jdbc_password>
-            </properties>
-        </profile>
+        <!--<profile>-->
+            <!--<id>dev</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+            <!--<properties>-->
+                <!--<jdbc_url><![CDATA[jdbc:mysql://10.100.141.39:3306/tm_dte]]></jdbc_url>-->
+                <!--<jdbc_maxActive>20</jdbc_maxActive>-->
+                <!--<jdbc_username>tm_dte</jdbc_username>-->
+                <!--<jdbc_password>tm_dte123</jdbc_password>-->
+            <!--</properties>-->
+        <!--</profile>-->
     </profiles>
 
 
