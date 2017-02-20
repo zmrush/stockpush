@@ -17,7 +17,14 @@ public class SubscribeDao extends AbstractDao{
     }
 
     public static final String SUBSCRIBE_SQL="insert into push_subscribe(nodeid,uid,subscribetime) values(?,?,now()) ";
+    public static final String UNSUBSCRIBE_SQL="delete from push_subscribe where uid=? and nodeid=?";
 
+    /**
+     * 订阅节点（单个用户）
+     * @param subscribeBean
+     * @return
+     * @throws Exception
+     */
     public int subscribeNode(final SubscribeBean subscribeBean) throws Exception{
         try {
             int count = DaoUtil.insert(dataSource, subscribeBean, SUBSCRIBE_SQL, new DaoUtil.UpdateCallback<SubscribeBean>() {
@@ -31,6 +38,24 @@ public class SubscribeDao extends AbstractDao{
             return 1;
         }
     }
+
+    /**
+     * 反订阅节点
+     * @param subscribeBean
+     * @return
+     * @throws Exception
+     */
+    public int unSubscribe(final SubscribeBean subscribeBean) throws Exception{
+
+        int count = DaoUtil.delete(dataSource, subscribeBean, UNSUBSCRIBE_SQL, new DaoUtil.UpdateCallback<SubscribeBean>() {
+            public void before(PreparedStatement statement, SubscribeBean target) throws Exception {
+                statement.setString(1, subscribeBean.getUid());
+                statement.setInt(2, subscribeBean.getNodeid());
+            }
+        });
+        return count;
+    }
+
     public static void main(String[] args) throws Exception{
         push.datasource.DataSourceConfig dataSourceConfig=new DataSourceConfig();
         dataSourceConfig.setType("HikariCP");
@@ -42,16 +67,18 @@ public class SubscribeDao extends AbstractDao{
         push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
         SubscribeDao subscribeDao= new SubscribeDao(dataSourceFactory.build());
 
-        String uid ="hello";
         int nodeid=1;
+        String uid ="hello";
 
         SubscribeBean subscribeBean =new SubscribeBean();
         subscribeBean.setUid(uid);
         subscribeBean.setNodeid(nodeid);
 
-//        SubscribeDao subscribe = new SubscribeDao();
         int count = subscribeDao.subscribeNode(subscribeBean);
         System.out.println("订阅节点的个数-----》"+count);
+
+        int number = subscribeDao.unSubscribe(subscribeBean);
+        System.out.println("反订阅节点的个数----->"+number);
     }
 
 }
