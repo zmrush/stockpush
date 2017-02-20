@@ -1,6 +1,8 @@
 package push.bottom.dao;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import push.bottom.message.SubscribeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
@@ -12,6 +14,8 @@ import java.sql.PreparedStatement;
  * Created by lizheng on 2017/2/17.
  */
 public class SubscribeDao extends AbstractDao{
+    private static final Logger logger = LoggerFactory.getLogger(SubscribeDao.class);
+
     public SubscribeDao(XDataSource dataSource){
         super(dataSource);
     }
@@ -35,6 +39,7 @@ public class SubscribeDao extends AbstractDao{
             });
             return count;
         }catch (MySQLIntegrityConstraintViolationException e){
+            logger.info("该用户"+subscribeBean.getUid()+"已经订阅过节点id:"+subscribeBean.getNodeid());
             return 1;
         }
     }
