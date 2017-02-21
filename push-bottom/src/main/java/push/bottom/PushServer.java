@@ -7,24 +7,29 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import push.bottom.dao.NodeDao;
+import push.bottom.dao.SubscribeDao;
 import push.bottom.dao.UserDao;
+import push.bottom.message.NodeBean;
 import push.bottom.message.Registration;
+import push.bottom.message.SubscribeBean;
 import push.bottom.model.User;
 import push.io.*;
 import push.message.AbstractMessage;
 import push.message.Entity;
+import push.message.GroupMessage;
 import push.middle.*;
 import push.middle.PushClient;
 
 import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executors;
 
 /**
@@ -37,6 +42,25 @@ public class PushServer {
     //-----------------------------------------------------------------------
     //账户数据库操作
     private UserDao userDao;
+    private SubscribeDao subscribeDao;
+    private NodeDao nodeDao;
+
+    public NodeDao getNodeDao() {
+        return nodeDao;
+    }
+
+    public void setNodeDao(NodeDao nodeDao) {
+        this.nodeDao = nodeDao;
+    }
+
+    public SubscribeDao getSubscribeDao() {
+        return subscribeDao;
+    }
+
+    public void setSubscribeDao(SubscribeDao subscribeDao) {
+        this.subscribeDao = subscribeDao;
+    }
+
     public UserDao getUserDao() {
         return userDao;
     }
@@ -44,6 +68,7 @@ public class PushServer {
         this.userDao = userDao;
     }
     //------------------------------------------------------------------------
+
     int bufferSize = 1024;
     public class ConnectionEventFactory implements EventFactory<ConnectionEvent> {
         public ConnectionEvent newInstance() {
@@ -126,11 +151,22 @@ public class PushServer {
                 String password=login.getAuthToken();
                 try {
                     clients.put(event.getUid(),event.getChc());
-//                    User user=userDao.findByUserInfo(username,password);
-//                    if(user!=null)
-//                        clients.put(event.getUid(),event.getChc());
-//                    else
-//                        event.getChc().close();
+                    List<NodeBean> nodeList = subscribeDao.querySubscribeNodeListByUid(username);
+                    for(int i=0;i<nodeList.size();i++){
+                        Set<ChannelHandlerContext> sets = codeClients.get(String.valueOf(nodeList.get(i).getNodeid()));
+                        if(sets==null){
+                            //如果该节点的set不存在，则新建一个。
+                            CopyOnWriteArraySet<ChannelHandlerContext> codeSet=new CopyOnWriteArraySet<ChannelHandlerContext>();
+                            codeSet.add(event.getChc());
+                            Object isPut=codeClients.putIfAbsent(String.valueOf(nodeList.get(i).getNodeid()),codeSet);
+                            if(isPut!=null){
+                                codeClients.get(nodeList.get(i).toString()).add(event.getChc());
+                            }
+                        }else{
+                            //如果该节点的set存在，那么把这个用户添加进去
+                            sets.add(event.getChc());
+                        }
+                    }
                 }catch (Exception e){
                     event.getChc().close();
                 }
@@ -154,6 +190,7 @@ public class PushServer {
                 String to=message.getTo();
                 String content=message.getMessage();
                 AbstractMessage abstractMessage=JSON.parseObject(content, AbstractMessage.class);
+                //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
                 if(abstractMessage.getType().equals("1")){
                     Registration registration= JSON.parseObject(content, Registration.class);
                     try {
@@ -161,10 +198,36 @@ public class PushServer {
                     }catch (Exception e){
                         logger.error("create user error",e);
                     }
+                }else if(abstractMessage.getType().equals("3")){
+                    NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
+                    try {
+                        nodeDao.createNode(nodeBean);
+                    } catch (Exception e) {
+                        logger.error("create node error",e);
+                    }
+                }else if(abstractMessage.getType().equals("4")){
+                    NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
+                    try {
+                        nodeDao.deleteNodeByName(nodeBean);
+                    } catch (Exception e) {
+                        logger.error("delete node error",e);
+                    }
+                }else if(abstractMessage.getType().equals("5")){
+                    SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
+                    try {
+                        subscribeDao.subscribeNode(subscribeBean);
+                    } catch (Exception e) {
+                        logger.error("subscribe node error",e);
+                    }
+                }else if(abstractMessage.getType().equals("6")){
+                    SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
+                    try {
+                        subscribeDao.unSubscribe(subscribeBean);
+                    } catch (Exception e) {
+                        logger.error("unSubscribe node error",e);
+                    }
                 }
-//                ChannelHandlerContext toContext=clients.get(to);
-//                if(toContext!=null)
-//                    toContext.writeAndFlush(msg);
+
             }
         }
     }
@@ -179,12 +242,22 @@ public class PushServer {
     }
     public class MiddleEventHandler implements EventHandler<MessageEvent> {
         public void onEvent(MessageEvent messageEvent, long l, boolean b) throws Exception {
-            //Entity.Message message=event.getMessage().getExtension(Entity.message);
-            //System.out.println(message.getMessage());
-            Iterator<ConcurrentHashMap.Entry<String,ChannelHandlerContext>> iter=clients.entrySet().iterator();
-            while(iter.hasNext()){
-                iter.next().getValue().writeAndFlush(messageEvent.getMessage());
+            Entity.Message message=messageEvent.getMessage().getExtension(Entity.message);
+            if(JSON.parseObject(message.getMessage(),AbstractMessage.class).getType().equals("2")){
+                GroupMessage groupMessage=JSON.parseObject(message.getMessage(),GroupMessage.class);
+                String nodeId=String.valueOf(groupMessage.getNodeid());
+                Set<ChannelHandlerContext> clients=codeClients.get(nodeId);
+
+                Iterator<ChannelHandlerContext> iter=clients.iterator();
+                while(iter.hasNext()){
+                    iter.next().writeAndFlush(messageEvent.getMessage());
+
+                }
             }
+//            Iterator<ConcurrentHashMap.Entry<String,ChannelHandlerContext>> iter=clients.entrySet().iterator();
+//            while(iter.hasNext()){
+//                iter.next().getValue().writeAndFlush(messageEvent.getMessage());
+//            }
         }
     }
     //----------------------------------------------------------------------------

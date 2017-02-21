@@ -36,4 +36,10 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
+    <bean id="subscribeDao" class="push.bottom.dao.SubscribeDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    <bean id="nodeDao" class="push.bottom.dao.NodeDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
 </beans>

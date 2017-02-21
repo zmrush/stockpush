@@ -3,6 +3,7 @@ package push.bottom.dao;
 import push.bottom.message.Registration;
 import push.bottom.model.User;
 import push.datasource.DaoUtil;
+import push.datasource.DataSourceConfig;
 import push.datasource.XDataSource;
 
 import java.sql.PreparedStatement;
@@ -46,5 +47,27 @@ public class UserDao extends AbstractDao{
             }
         });
         return count;
+    }
+
+    public static void main(String[] args) throws Exception{
+        push.datasource.DataSourceConfig dataSourceConfig=new DataSourceConfig();
+        dataSourceConfig.setType("HikariCP");
+        dataSourceConfig.setDriver("com.mysql.jdbc.Driver");
+        dataSourceConfig.setUrl("jdbc:mysql://10.100.141.39:3306/tm_dte");
+        dataSourceConfig.setUser("tm_dte");
+        dataSourceConfig.setPassword("tm_dte123");
+
+        push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
+        UserDao userDao= new UserDao(dataSourceFactory.build());
+        String str = "lizheng";
+        String password="123456";
+
+        Registration user = new Registration();
+        for(int i=1;i<=1000;i++){
+            user.setUsername(str+String.valueOf(i));
+            user.setPassword(password);
+            userDao.createNewUser(user);
+        }
+
     }
 }

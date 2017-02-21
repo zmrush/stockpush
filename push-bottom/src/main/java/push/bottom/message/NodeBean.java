@@ -10,6 +10,7 @@ public class NodeBean extends AbstractMessage{
     private String nodename;//节点名称
     private String host;//host地址
     private String description;//节点描述
+    private String nodetype;
 
     public int getNodeid() {
         return nodeid;
@@ -41,5 +42,13 @@ public class NodeBean extends AbstractMessage{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getNodetype() {
+        return nodetype;
+    }
+
+    public void setNodetype(String nodetype) {
+        this.nodetype = nodetype;
     }
 }

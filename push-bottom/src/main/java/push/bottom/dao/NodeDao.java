@@ -30,7 +30,7 @@ public class NodeDao extends AbstractDao{
                 public void before(PreparedStatement statement, NodeBean target) throws Exception {
                     statement.setString(1,nodeBean.getNodename());
                     statement.setString(2,nodeBean.getDescription());
-                    statement.setInt(3,Integer.parseInt(nodeBean.getType()));
+                    statement.setInt(3,Integer.parseInt(nodeBean.getNodetype()));
                 }
             });
             return count;
@@ -86,33 +86,33 @@ public class NodeDao extends AbstractDao{
         push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
         NodeDao nodeDao= new NodeDao(dataSourceFactory.build());
 
-        String nodename ="pushAllTest4";
-        String description ="全体公告4";
-        String type="0";
+        String nodename ="pushAllTest5";
+        String description ="全体公告5";
+        String nodetype="0";
 
         NodeBean nodeBean =new NodeBean();
         nodeBean.setNodename(nodename);
         nodeBean.setDescription(description);
-        nodeBean.setType(type);
+        nodeBean.setNodetype(nodetype);
         int count = nodeDao.createNode(nodeBean);
         if(count==1){
             logger.info("创建节点："+nodename+"成功。");
         }
 
 
-        NodeBean nodeBean1 =new NodeBean();
-        nodeBean1.setNodeid(20);
-        int count1 = nodeDao.deleteNodeById(nodeBean1);
-        if(count1==1){
-            logger.info("通过节点id:"+nodeBean1.getNodeid()+"，删除成功。");
-        }
-
-        NodeBean nodeBean2 =new NodeBean();
-        nodeBean2.setNodename("pushAllTest3");
-        int count2 = nodeDao.deleteNodeByName(nodeBean2);
-        if(count2==1){
-            logger.info("通过节点名字:"+nodeBean2.getNodename()+"，删除成功。");
-        }
+//        NodeBean nodeBean1 =new NodeBean();
+//        nodeBean1.setNodeid(20);
+//        int count1 = nodeDao.deleteNodeById(nodeBean1);
+//        if(count1==1){
+//            logger.info("通过节点id:"+nodeBean1.getNodeid()+"，删除成功。");
+//        }
+//
+//        NodeBean nodeBean2 =new NodeBean();
+//        nodeBean2.setNodename("pushAllTest3");
+//        int count2 = nodeDao.deleteNodeByName(nodeBean2);
+//        if(count2==1){
+//            logger.info("通过节点名字:"+nodeBean2.getNodename()+"，删除成功。");
+//        }
     }
 
 }

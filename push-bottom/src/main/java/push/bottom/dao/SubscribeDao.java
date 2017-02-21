@@ -3,12 +3,15 @@ package push.bottom.dao;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.bottom.message.NodeBean;
 import push.bottom.message.SubscribeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
 import push.datasource.XDataSource;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * Created by lizheng on 2017/2/17.
@@ -22,6 +25,7 @@ public class SubscribeDao extends AbstractDao{
 
     public static final String SUBSCRIBE_SQL="insert into push_subscribe(nodeid,uid,subscribetime) values(?,?,now()) ";
     public static final String UNSUBSCRIBE_SQL="delete from push_subscribe where uid=? and nodeid=?";
+    public static final String QUERY_SUBSCRIBE_NODES_BY_NODENAME_SQL="select nodeid from push_subscribe where uid=? ";
 
     /**
      * 订阅节点（单个用户）
@@ -61,6 +65,28 @@ public class SubscribeDao extends AbstractDao{
         return count;
     }
 
+    /**
+     * 根据uid查询用户订阅所以节点id
+     * @param uid
+     * @return
+     * @throws Exception
+     */
+    public List<NodeBean> querySubscribeNodeListByUid(final String uid) throws Exception{
+        List<NodeBean> subscribeNodeList = DaoUtil.queryList(dataSource, QUERY_SUBSCRIBE_NODES_BY_NODENAME_SQL, new DaoUtil.QueryCallback<NodeBean>() {
+            public NodeBean map(ResultSet rs) throws Exception {
+                NodeBean nodeBean= new NodeBean();
+                nodeBean.setNodeid(rs.getInt(1));
+                return nodeBean;
+            }
+
+            public void before(PreparedStatement statement) throws Exception {
+                statement.setString(1,uid);
+            }
+        });
+
+        return subscribeNodeList;
+    }
+
     public static void main(String[] args) throws Exception{
         push.datasource.DataSourceConfig dataSourceConfig=new DataSourceConfig();
         dataSourceConfig.setType("HikariCP");
@@ -72,18 +98,25 @@ public class SubscribeDao extends AbstractDao{
         push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
         SubscribeDao subscribeDao= new SubscribeDao(dataSourceFactory.build());
 
-        int nodeid=1;
-        String uid ="hello";
+        List<NodeBean> subscribeNodeList =subscribeDao.querySubscribeNodeListByUid("lizheng1");
+        for(NodeBean bean:subscribeNodeList){
+            System.out.println("节点id----》"+bean.getNodeid());
+        }
 
-        SubscribeBean subscribeBean =new SubscribeBean();
-        subscribeBean.setUid(uid);
-        subscribeBean.setNodeid(nodeid);
+        int nodeid=3;
+        String uid ="lizheng";
 
-        int count = subscribeDao.subscribeNode(subscribeBean);
-        System.out.println("订阅节点的个数-----》"+count);
+        for(int i=6;i<=10;i++){
+            SubscribeBean subscribeBean =new SubscribeBean();
+            subscribeBean.setUid(uid+String.valueOf(i));
+            subscribeBean.setNodeid(nodeid);
+            int count = subscribeDao.subscribeNode(subscribeBean);
+            System.out.println("订阅节点的个数-----》"+count);
+        }
 
-        int number = subscribeDao.unSubscribe(subscribeBean);
-        System.out.println("反订阅节点的个数----->"+number);
+
+//        int number = subscribeDao.unSubscribe(subscribeBean);
+//        System.out.println("反订阅节点的个数----->"+number);
     }
 
 }
