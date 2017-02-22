@@ -65,47 +65,47 @@ public class PushClient {
 //        Thread.currentThread().sleep(10000000);
 //    }
 
-    public static void main(String[] args) throws Exception{
-        //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
-        PushClient pushClient = new PushClient("10.10.104.84", 9988,"lizheng1", "123456");
-        for(;;) {
-            BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
-            String line = bufferedInputStream.readLine();
-            String[] strList=line.split(" ");
-
-            NodeBean nodeBean =new NodeBean();
-
-            //create node Test
-//            nodeBean.setNodename(strList[0]);
-//            nodeBean.setDescription(strList[1]);
-//            nodeBean.setNodetype(strList[2]);
-//            nodeBean.setType(strList[3]);
-
-            //delete node Test
-//            nodeBean.setNodename(strList[0]);
-//            nodeBean.setType(strList[1]);
-//            pushClient.sendData(JSON.toJSONString(nodeBean));
-
-            //subscribe node Test
-            SubscribeBean subscribeBean =new SubscribeBean();
-            subscribeBean.setUid(strList[0]);
-            subscribeBean.setNodeid(Integer.valueOf(strList[1]));
-            subscribeBean.setType(strList[2]);
-            pushClient.sendData(JSON.toJSONString(subscribeBean));
-        }
-    }
 //    public static void main(String[] args) throws Exception{
-//        PushClient pushClient=new PushClient("10.10.104.103", 9988, String.valueOf(0), "123456");
-//        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
-//        String line;
-//        while((line=bufferedInputStream.readLine())!=null){
-//            Registration registration = new Registration();
-//            registration.setType("1");
-//            String[] strings=line.split(" ");
-//            registration.setUsername(strings[0]);
-//            registration.setPassword(strings[1]);
-//            pushClient.sendData(JSON.toJSONString(registration));
+//        //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
+//        PushClient pushClient = new PushClient("10.10.104.84", 9988,"lizheng1", "123456");
+//        for(;;) {
+//            BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
+//            String line = bufferedInputStream.readLine();
+//            String[] strList=line.split(" ");
+//
+//            NodeBean nodeBean =new NodeBean();
+//
+//            //create node Test
+////            nodeBean.setNodename(strList[0]);
+////            nodeBean.setDescription(strList[1]);
+////            nodeBean.setNodetype(strList[2]);
+////            nodeBean.setType(strList[3]);
+//
+//            //delete node Test
+////            nodeBean.setNodename(strList[0]);
+////            nodeBean.setType(strList[1]);
+////            pushClient.sendData(JSON.toJSONString(nodeBean));
+//
+//            //subscribe node Test
+//            SubscribeBean subscribeBean =new SubscribeBean();
+//            subscribeBean.setUid(strList[0]);
+//            subscribeBean.setNodeid(Integer.valueOf(strList[1]));
+//            subscribeBean.setType(strList[2]);
+//            pushClient.sendData(JSON.toJSONString(subscribeBean));
 //        }
 //    }
+    public static void main(String[] args) throws Exception{
+        PushClient pushClient=new PushClient("10.10.104.103", 9988, String.valueOf(0), "123456");
+        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        while((line=bufferedInputStream.readLine())!=null){
+            Registration registration = new Registration();
+            registration.setType("1");
+            String[] strings=line.split(" ");
+            registration.setUsername(strings[0]);
+            registration.setPassword(strings[1]);
+            pushClient.sendData(JSON.toJSONString(registration));
+        }
+    }
 
 }

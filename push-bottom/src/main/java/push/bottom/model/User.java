@@ -11,6 +11,7 @@ public class User {
     private String password;
     private Timestamp createDate;
     private Timestamp updateDate;
+    private Integer type;
 
     public Long getId() {
         return id;
@@ -50,5 +51,13 @@ public class User {
 
     public void setUpdateDate(Timestamp updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

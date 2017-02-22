@@ -8,6 +8,7 @@ import push.message.Entity;
  */
 public class ConnectionEvent {
     public static enum ConnectionEventType{
+        CONNECTION_TRANSIENT,
         CONNECTION_ADD,
         CONNECTION_REMOVE,
         MESSAGE_TRANSFER

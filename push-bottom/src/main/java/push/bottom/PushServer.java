@@ -28,9 +28,7 @@ import push.middle.PushClient;
 
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * Created by mingzhu7 on 2017/1/19.
@@ -129,6 +127,12 @@ public class PushServer {
     Disruptor<MessageEvent> middleDisruptor;
     private MessageEventProducer messageEventProducer;
     //------------------------------------------------------------------------
+    //管理员账号
+    private Set<String> administrators=new HashSet<String>();
+    //没有登录的账号，我们也会定期清理的
+    private Map<ChannelHandlerContext,Long> inactiveChannel=new ConcurrentHashMap<ChannelHandlerContext, Long>();
+    private ScheduledExecutorService cleanSchedule=Executors.newScheduledThreadPool(1);
+
     //连接的客户端
     private ConcurrentHashMap<String,ChannelHandlerContext> clients=new ConcurrentHashMap<String, ChannelHandlerContext>();
 
@@ -145,11 +149,23 @@ public class PushServer {
     public class BottomEventHandler implements EventHandler<ConnectionEvent> {
 
         public void onEvent(ConnectionEvent event, long l, boolean b) throws Exception {
-            if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_ADD){
+            if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_TRANSIENT){
+                logger.info("put inactive channel");
+                inactiveChannel.put(event.getChc(),System.currentTimeMillis());
+            }
+            else if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_ADD){
+                logger.info("remove inavtive channel size:"+inactiveChannel.size());
+                inactiveChannel.remove(event.getChc());
                 Entity.Login login=event.getMessage().getExtension(Entity.login);
                 String username=login.getUid();
                 String password=login.getAuthToken();
                 try {
+                    User user=userDao.findByUserInfo(username,password);
+                    if(user == null)
+                    {
+                        event.getChc().close();
+                        return;
+                    }
                     clients.put(event.getUid(),event.getChc());
                     List<NodeBean> nodeList = subscribeDao.querySubscribeNodeListByUid(username);
                     for(int i=0;i<nodeList.size();i++){
@@ -188,10 +204,17 @@ public class PushServer {
                 Entity.BaseEntity msg=event.getMessage();
                 Entity.Message message=msg.getExtension(Entity.message);
                 String to=message.getTo();
+                String from=message.getFrom();
                 String content=message.getMessage();
                 AbstractMessage abstractMessage=JSON.parseObject(content, AbstractMessage.class);
+                if(!clients.contains(from) || event.getChc()!=clients.get(from))
+                    //没有登录或者不是本人发的消息不能够进行处理
+                    return;
                 //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
                 if(abstractMessage.getType().equals("1")){
+                    //不是管理员或者没有登录
+                    if(!administrators.contains(from))
+                        return;
                     Registration registration= JSON.parseObject(content, Registration.class);
                     try {
                         userDao.createNewUser(registration);
@@ -199,6 +222,9 @@ public class PushServer {
                         logger.error("create user error",e);
                     }
                 }else if(abstractMessage.getType().equals("3")){
+                    //不是管理员或者没有登录
+                    if(!administrators.contains(from))
+                        return;
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
                         nodeDao.createNode(nodeBean);
@@ -206,6 +232,9 @@ public class PushServer {
                         logger.error("create node error",e);
                     }
                 }else if(abstractMessage.getType().equals("4")){
+                    //不是管理员或者没有登录
+                    if(!administrators.contains(from))
+                        return;
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
                         nodeDao.deleteNodeByName(nodeBean);
@@ -214,6 +243,8 @@ public class PushServer {
                     }
                 }else if(abstractMessage.getType().equals("5")){
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
+                    if(!subscribeBean.getUid().equals(from) && !administrators.contains(from))
+                        return;
                     try {
                         subscribeDao.subscribeNode(subscribeBean);
                     } catch (Exception e) {
@@ -221,6 +252,8 @@ public class PushServer {
                     }
                 }else if(abstractMessage.getType().equals("6")){
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
+                    if(!subscribeBean.getUid().equals(from) && !administrators.contains(from))
+                        return;
                     try {
                         subscribeDao.unSubscribe(subscribeBean);
                     } catch (Exception e) {
@@ -270,9 +303,33 @@ public class PushServer {
     public void setPort(int port) {
         this.port = port;
     }
+    public class CleanRunnable implements Runnable{
 
+        @Override
+        public void run() {
+            Long now=System.currentTimeMillis();
+            Iterator<Map.Entry<ChannelHandlerContext,Long>> iter=inactiveChannel.entrySet().iterator();
+            while(iter.hasNext()){
+                Map.Entry<ChannelHandlerContext,Long> tmp=iter.next();
+                ChannelHandlerContext chc=tmp.getKey();
+                Long start=tmp.getValue();
+                //超过三分钟没有登录清理掉连接
+                if(now>(start+3*60*1000)){
+                    chc.close();
+                    iter.remove();
+                    logger.info("remove long-no-login channel");
+                }
+            }
+
+        }
+    }
     public PushServer(int port){
         this.port=port;
+        //------------------------------------------------------------
+        String[] adm={"lizheng1"};
+        administrators.addAll(Arrays.asList(adm));
+        //------------------------------------------------------------
+        cleanSchedule.scheduleAtFixedRate(new CleanRunnable(),0,5*60, TimeUnit.SECONDS);
         //------------------------------------------------------------
         //启动客户端消息的队列
         clientDisruptor = new Disruptor<ConnectionEvent>(factory,

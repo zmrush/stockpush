@@ -48,7 +48,7 @@ public class SecurePushClient {
             logger.error("start error",e);
             throw new RuntimeException("client start error",e);
         }
-        sf=ses.scheduleAtFixedRate(new ConnectionTask(this),0,10000, TimeUnit.MILLISECONDS);
+        sf=ses.scheduleAtFixedRate(new ConnectionTask(this),0,20000, TimeUnit.MILLISECONDS);
     }
     public class ConnectionTask implements Runnable{
         public SecurePushClient spc;

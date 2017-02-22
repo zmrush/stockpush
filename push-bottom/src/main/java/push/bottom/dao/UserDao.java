@@ -17,7 +17,7 @@ public class UserDao extends AbstractDao{
         super(dataSource);
     }
     public static final String FIND_BY_ID_SQL =
-            "SELECT username,password" +
+            "SELECT username,password,type" +
                     "" + " FROM push_user where username=? and password=?";
     public static final String INSERTUSER =
             "insert into push_user(username,password,create_date,update_date) values(?,?,now(),now())";
@@ -28,6 +28,7 @@ public class UserDao extends AbstractDao{
                         User target = new User();
                         target.setUsername(rs.getString(1));
                         target.setPassword(rs.getString(2));
+                        target.setType(rs.getInt(3));
                         return target;
                     }
 

@@ -44,6 +44,10 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         logger.debug("receive connect and channle is active now:"+ctx.name());
+        ConnectionEvent ce=new ConnectionEvent();
+        ce.setChc(ctx);
+        ce.setCet(ConnectionEvent.ConnectionEventType.CONNECTION_TRANSIENT);
+        eventManager.add(ce);
         // Once session is secured, send a greeting and register the channel to the global channel
         // list so the channel received the messages from others.
 //        ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
@@ -68,6 +72,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
 //                toContext.writeAndFlush(msg);
             ConnectionEvent ce=new ConnectionEvent();
             ce.setCet(ConnectionEvent.ConnectionEventType.MESSAGE_TRANSFER);
+            ce.setChc(ctx);
             ce.setMessage(msg);
             eventManager.add(ce);
         }
