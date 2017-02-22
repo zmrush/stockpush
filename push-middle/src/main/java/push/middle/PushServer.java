@@ -1,8 +1,10 @@
 package push.middle;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.message.GroupMessage;
 import push.io.ConnectionEvent;
 import push.io.ConnectionListener;
 import push.io.SecurePushServer;
@@ -95,7 +97,12 @@ public class PushServer {
         for(;;) {
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
             String ss=br.readLine();
-            pushServer.broadCast(ss);
+            String[] spl=ss.split(" ");
+            GroupMessage groupMessage=new GroupMessage();
+            groupMessage.setType("2");
+            groupMessage.setNodeid(Integer.valueOf(spl[0]));
+            groupMessage.setMessage(spl[1]);
+            pushServer.broadCast(JSON.toJSONString(groupMessage));
         }
     }
 }
