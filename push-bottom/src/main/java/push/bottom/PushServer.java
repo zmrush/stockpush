@@ -7,8 +7,10 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import com.sun.javafx.binding.StringFormatter;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -161,8 +163,8 @@ public class PushServer {
                 String password=login.getAuthToken();
                 try {
                     User user=userDao.findByUserInfo(username,password);
-                    if(user == null)
-                    {
+                    if(user == null){
+                        logger.info("user login fail,username:{},password:{}",username,password);
                         event.getChc().close();
                         return;
                     }
@@ -207,12 +209,12 @@ public class PushServer {
                 String from=message.getFrom();
                 String content=message.getMessage();
                 AbstractMessage abstractMessage=JSON.parseObject(content, AbstractMessage.class);
-                if(!clients.contains(from) || event.getChc()!=clients.get(from))
-                    //没有登录或者不是本人发的消息不能够进行处理
+                //没有登录或者不是本人发的消息不能够进行处理
+                if(clients.get(from)!=event.getChc())
                     return;
                 //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
                 if(abstractMessage.getType().equals("1")){
-                    //不是管理员或者没有登录
+                    //只有管理员才能注册用户
                     if(!administrators.contains(from))
                         return;
                     Registration registration= JSON.parseObject(content, Registration.class);
@@ -222,7 +224,7 @@ public class PushServer {
                         logger.error("create user error",e);
                     }
                 }else if(abstractMessage.getType().equals("3")){
-                    //不是管理员或者没有登录
+                    //只有管理员才能创建节点
                     if(!administrators.contains(from))
                         return;
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
@@ -232,7 +234,7 @@ public class PushServer {
                         logger.error("create node error",e);
                     }
                 }else if(abstractMessage.getType().equals("4")){
-                    //不是管理员或者没有登录
+                    //只有管理员才能删除节点
                     if(!administrators.contains(from))
                         return;
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
@@ -242,20 +244,44 @@ public class PushServer {
                         logger.error("delete node error",e);
                     }
                 }else if(abstractMessage.getType().equals("5")){
+                    //只有管理员或者用户登录才能订阅节点
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
                     if(!subscribeBean.getUid().equals(from) && !administrators.contains(from))
                         return;
                     try {
-                        subscribeDao.subscribeNode(subscribeBean);
+                        int count = subscribeDao.subscribeNode(subscribeBean);
+                        if(count==1){
+                            //把该用户添加到codeClients里面
+                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeid());
+                            if(sets==null){
+                                //如果该节点的set不存在，则新建一个。
+                                CopyOnWriteArraySet<ChannelHandlerContext> codeSet=new CopyOnWriteArraySet<ChannelHandlerContext>();
+                                codeSet.add(event.getChc());
+                                Object isPut=codeClients.putIfAbsent(String.valueOf(subscribeBean.getNodeid()),codeSet);
+                                if(isPut!=null){
+                                    codeClients.get(String.valueOf(subscribeBean.getNodeid())).add(event.getChc());
+                                }
+                            }else{
+                                //如果该节点的set存在，那么把这个用户添加进去
+                                sets.add(event.getChc());
+                            }
+
+                        }
                     } catch (Exception e) {
                         logger.error("subscribe node error",e);
                     }
                 }else if(abstractMessage.getType().equals("6")){
+                    //只有管理员或者用户登录才能反订阅节点
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
-                    if(!subscribeBean.getUid().equals(from) && !administrators.contains(from))
+                    if(!subscribeBean.getUid().equals(from) && !administrators.contains(from)) {
                         return;
+                    }
                     try {
-                        subscribeDao.unSubscribe(subscribeBean);
+                        int count = subscribeDao.unSubscribe(subscribeBean);
+                        if(count==1){
+                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeid());
+                            sets.remove(event.getChc());
+                        }
                     } catch (Exception e) {
                         logger.error("unSubscribe node error",e);
                     }

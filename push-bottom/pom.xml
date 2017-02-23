@@ -194,6 +194,18 @@
 
 
     <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jdbc_url><![CDATA[jdbc:mysql://10.100.141.39:3306/tm_dte]]></jdbc_url>
+                <jdbc_maxActive>20</jdbc_maxActive>
+                <jdbc_username>tm_dte</jdbc_username>
+                <jdbc_password>tm_dte123</jdbc_password>
+            </properties>
+        </profile>
     </profiles>
 
 
