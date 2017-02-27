@@ -15,6 +15,7 @@ import push.message.Entity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -38,6 +39,8 @@ public class PushClient {
         public void onEvent(MessageEvent event) {
             Entity.Message message=event.getMessage().getExtension(Entity.message);
             logger.info(System.currentTimeMillis()+":"+message.getCreateAt()+":"+message.getMessage());
+            event.getMessage().getMessageId();
+            notify();
         }
     }
     public PushClient(String host,int port,String uid,String password){
@@ -48,6 +51,11 @@ public class PushClient {
     }
     public void sendData(String message) throws Exception{
         securePushClient.sendData(uid,"0",message);
+    }
+    public void sendDataSync(String message)throws Exception{
+        securePushClient.sendDataSync(uid,"0",message,new UUID());
+        wait();
+
     }
 
     /**

@@ -208,6 +208,7 @@ public class PushServer {
                 String to=message.getTo();
                 String from=message.getFrom();
                 String content=message.getMessage();
+                String messageId=message.getMessageId();
                 AbstractMessage abstractMessage=JSON.parseObject(content, AbstractMessage.class);
                 //没有登录或者不是本人发的消息不能够进行处理
                 if(clients.get(from)!=event.getChc())
@@ -230,6 +231,7 @@ public class PushServer {
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
                         nodeDao.createNode(nodeBean);
+                        ctx.writeAndFlush(new Message());
                     } catch (Exception e) {
                         logger.error("create node error",e);
                     }

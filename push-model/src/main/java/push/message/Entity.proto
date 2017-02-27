@@ -32,6 +32,7 @@ message Message{
     required string message=3;
     optional int64 createAt=4;
     optional int64 readAt=5;
+    optional string messageId=6;
 }
 message Ping{
    required string message=1;

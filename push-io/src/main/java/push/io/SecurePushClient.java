@@ -93,6 +93,19 @@ public class SecurePushClient {
         if (f != null)
             f.sync();
     }
+    public void sendDataSync(String from,String to,String message,String messageId) throws Exception{
+        Entity.BaseEntity.Builder builder2 = Entity.BaseEntity.newBuilder();
+        builder2.setType(Entity.Type.MESSAGE);
+        Entity.Message.Builder msgBuilder = Entity.Message.newBuilder();
+        msgBuilder.setFrom(from);
+        msgBuilder.setTo(to);
+        msgBuilder.setMessage(message);
+        msgBuilder.setMessageId(messageId);
+        builder2.setExtension(Entity.message,msgBuilder.build());
+        ChannelFuture f = ch.writeAndFlush(builder2.build());
+        if (f != null)
+            f.sync();
+    }
     public void login() throws Exception{
         Entity.Login.Builder login = Entity.Login.newBuilder();
         login.setUid(uid);
