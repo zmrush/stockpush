@@ -16,9 +16,11 @@ import push.message.Entity;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by mingzhu7 on 2017/1/19.
@@ -35,12 +37,18 @@ public class PushClient {
             return thread;
         }
     });
-    public static class BottomClientMessageListener implements MessageListener{
+    public  class BottomClientMessageListener implements MessageListener{
         public void onEvent(MessageEvent event) {
             Entity.Message message=event.getMessage().getExtension(Entity.message);
             logger.info(System.currentTimeMillis()+":"+message.getCreateAt()+":"+message.getMessage());
-            event.getMessage().getMessageId();
-            notify();
+            //------------------------------------------------------
+            String messageId=message.getMessageId();
+            ReentrantLock writeLock=lockMap.get(messageId);
+            if(writeLock!=null){
+                messageMap.put(messageId,"");
+                writeLock.notify();
+            }
+            //------------------------------------------------------
         }
     }
     public PushClient(String host,int port,String uid,String password){
@@ -52,9 +60,30 @@ public class PushClient {
     public void sendData(String message) throws Exception{
         securePushClient.sendData(uid,"0",message);
     }
-    public void sendDataSync(String message)throws Exception{
-        securePushClient.sendDataSync(uid,"0",message,new UUID());
-        wait();
+    private ConcurrentHashMap<String,ReentrantLock> lockMap=new ConcurrentHashMap<String, ReentrantLock>();
+    private ConcurrentHashMap<String,String> messageMap=new ConcurrentHashMap<String, String>();
+    //private ReentrantLock writeLock=new ReentrantLock();
+    public void sendDataSync(String message,String messageId)throws Exception{
+        ReentrantLock writeLock=new ReentrantLock();
+        messageMap.put(messageId,null);
+        try {
+            lockMap.put(messageId,writeLock);
+            writeLock.lock();
+            securePushClient.sendDataSync(uid,"0",message,messageId);
+        //------------------------------------------------------------
+            writeLock.wait(3000);
+            if(messageMap.get(messageId)!=null){
+                //收到回复的消息
+            }else{
+                //超时
+            }
+        }finally {
+            writeLock.unlock();
+            lockMap.remove(messageId);
+            messageMap.remove(messageId);
+        }
+
+        //-----------------------------------------------------------
 
     }
 

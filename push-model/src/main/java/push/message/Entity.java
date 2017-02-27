@@ -7,10 +7,10 @@ public final class Entity {
   private Entity() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registry.add(Entity.login);
-    registry.add(Entity.message);
-    registry.add(Entity.logout);
-    registry.add(Entity.ping);
+    registry.add(push.message.Entity.login);
+    registry.add(push.message.Entity.message);
+    registry.add(push.message.Entity.logout);
+    registry.add(push.message.Entity.ping);
   }
   /**
    * Protobuf enum {@code push.message.Type}
@@ -87,7 +87,7 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return Entity.getDescriptor().getEnumTypes().get(0);
+      return push.message.Entity.getDescriptor().getEnumTypes().get(0);
     }
 
     private static final Type[] VALUES = values();
@@ -139,7 +139,7 @@ public final class Entity {
     /**
      * <code>required .push.message.Type type = 2;</code>
      */
-    Entity.Type getType();
+    push.message.Entity.Type getType();
   }
   /**
    * Protobuf type {@code push.message.BaseEntity}
@@ -148,7 +148,7 @@ public final class Entity {
       com.google.protobuf.GeneratedMessage.ExtendableMessage<
         BaseEntity> implements BaseEntityOrBuilder {
     // Use BaseEntity.newBuilder() to construct.
-    private BaseEntity(com.google.protobuf.GeneratedMessage.ExtendableBuilder<Entity.BaseEntity, ?> builder) {
+    private BaseEntity(com.google.protobuf.GeneratedMessage.ExtendableBuilder<push.message.Entity.BaseEntity, ?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
@@ -199,7 +199,7 @@ public final class Entity {
             }
             case 16: {
               int rawValue = input.readEnum();
-              Entity.Type value = Entity.Type.valueOf(rawValue);
+              push.message.Entity.Type value = push.message.Entity.Type.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -222,14 +222,14 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Entity.internal_static_push_message_BaseEntity_descriptor;
+      return push.message.Entity.internal_static_push_message_BaseEntity_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Entity.internal_static_push_message_BaseEntity_fieldAccessorTable
+      return push.message.Entity.internal_static_push_message_BaseEntity_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entity.BaseEntity.class, Entity.BaseEntity.Builder.class);
+              push.message.Entity.BaseEntity.class, push.message.Entity.BaseEntity.Builder.class);
     }
 
     public static com.google.protobuf.Parser<BaseEntity> PARSER =
@@ -293,7 +293,7 @@ public final class Entity {
 
     // required .push.message.Type type = 2;
     public static final int TYPE_FIELD_NUMBER = 2;
-    private Entity.Type type_;
+    private push.message.Entity.Type type_;
     /**
      * <code>required .push.message.Type type = 2;</code>
      */
@@ -303,13 +303,13 @@ public final class Entity {
     /**
      * <code>required .push.message.Type type = 2;</code>
      */
-    public Entity.Type getType() {
+    public push.message.Entity.Type getType() {
       return type_;
     }
 
     private void initFields() {
       id_ = "";
-      type_ = Entity.Type.LOGIN;
+      type_ = push.message.Entity.Type.LOGIN;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -332,7 +332,7 @@ public final class Entity {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessage
-        .ExtendableMessage<Entity.BaseEntity>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<push.message.Entity.BaseEntity>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeBytes(1, getIdBytes());
@@ -371,53 +371,53 @@ public final class Entity {
       return super.writeReplace();
     }
 
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.BaseEntity parseFrom(byte[] data)
+    public static push.message.Entity.BaseEntity parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.BaseEntity parseFrom(java.io.InputStream input)
+    public static push.message.Entity.BaseEntity parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static Entity.BaseEntity parseDelimitedFrom(java.io.InputStream input)
+    public static push.message.Entity.BaseEntity parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static Entity.BaseEntity parseDelimitedFrom(
+    public static push.message.Entity.BaseEntity parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.BaseEntity parseFrom(
+    public static push.message.Entity.BaseEntity parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -426,7 +426,7 @@ public final class Entity {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Entity.BaseEntity prototype) {
+    public static Builder newBuilder(push.message.Entity.BaseEntity prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -442,20 +442,20 @@ public final class Entity {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.ExtendableBuilder<
-          Entity.BaseEntity, Builder> implements Entity.BaseEntityOrBuilder {
+          push.message.Entity.BaseEntity, Builder> implements push.message.Entity.BaseEntityOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Entity.internal_static_push_message_BaseEntity_descriptor;
+        return push.message.Entity.internal_static_push_message_BaseEntity_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Entity.internal_static_push_message_BaseEntity_fieldAccessorTable
+        return push.message.Entity.internal_static_push_message_BaseEntity_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entity.BaseEntity.class, Entity.BaseEntity.Builder.class);
+                push.message.Entity.BaseEntity.class, push.message.Entity.BaseEntity.Builder.class);
       }
 
-      // Construct using Entity.BaseEntity.newBuilder()
+      // Construct using push.message.Entity.BaseEntity.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -477,7 +477,7 @@ public final class Entity {
         super.clear();
         id_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = Entity.Type.LOGIN;
+        type_ = push.message.Entity.Type.LOGIN;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -488,23 +488,23 @@ public final class Entity {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Entity.internal_static_push_message_BaseEntity_descriptor;
+        return push.message.Entity.internal_static_push_message_BaseEntity_descriptor;
       }
 
-      public Entity.BaseEntity getDefaultInstanceForType() {
-        return Entity.BaseEntity.getDefaultInstance();
+      public push.message.Entity.BaseEntity getDefaultInstanceForType() {
+        return push.message.Entity.BaseEntity.getDefaultInstance();
       }
 
-      public Entity.BaseEntity build() {
-        Entity.BaseEntity result = buildPartial();
+      public push.message.Entity.BaseEntity build() {
+        push.message.Entity.BaseEntity result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public Entity.BaseEntity buildPartial() {
-        Entity.BaseEntity result = new Entity.BaseEntity(this);
+      public push.message.Entity.BaseEntity buildPartial() {
+        push.message.Entity.BaseEntity result = new push.message.Entity.BaseEntity(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -521,16 +521,16 @@ public final class Entity {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entity.BaseEntity) {
-          return mergeFrom((Entity.BaseEntity)other);
+        if (other instanceof push.message.Entity.BaseEntity) {
+          return mergeFrom((push.message.Entity.BaseEntity)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entity.BaseEntity other) {
-        if (other == Entity.BaseEntity.getDefaultInstance()) return this;
+      public Builder mergeFrom(push.message.Entity.BaseEntity other) {
+        if (other == push.message.Entity.BaseEntity.getDefaultInstance()) return this;
         if (other.hasId()) {
           bitField0_ |= 0x00000001;
           id_ = other.id_;
@@ -560,11 +560,11 @@ public final class Entity {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entity.BaseEntity parsedMessage = null;
+        push.message.Entity.BaseEntity parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entity.BaseEntity) e.getUnfinishedMessage();
+          parsedMessage = (push.message.Entity.BaseEntity) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -650,7 +650,7 @@ public final class Entity {
       }
 
       // required .push.message.Type type = 2;
-      private Entity.Type type_ = Entity.Type.LOGIN;
+      private push.message.Entity.Type type_ = push.message.Entity.Type.LOGIN;
       /**
        * <code>required .push.message.Type type = 2;</code>
        */
@@ -660,13 +660,13 @@ public final class Entity {
       /**
        * <code>required .push.message.Type type = 2;</code>
        */
-      public Entity.Type getType() {
+      public push.message.Entity.Type getType() {
         return type_;
       }
       /**
        * <code>required .push.message.Type type = 2;</code>
        */
-      public Builder setType(Entity.Type value) {
+      public Builder setType(push.message.Entity.Type value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -680,7 +680,7 @@ public final class Entity {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = Entity.Type.LOGIN;
+        type_ = push.message.Entity.Type.LOGIN;
         onChanged();
         return this;
       }
@@ -819,14 +819,14 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Entity.internal_static_push_message_Login_descriptor;
+      return push.message.Entity.internal_static_push_message_Login_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Entity.internal_static_push_message_Login_fieldAccessorTable
+      return push.message.Entity.internal_static_push_message_Login_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entity.Login.class, Entity.Login.Builder.class);
+              push.message.Entity.Login.class, push.message.Entity.Login.Builder.class);
     }
 
     public static com.google.protobuf.Parser<Login> PARSER =
@@ -1010,53 +1010,53 @@ public final class Entity {
       return super.writeReplace();
     }
 
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Login parseFrom(byte[] data)
+    public static push.message.Entity.Login parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Login parseFrom(java.io.InputStream input)
+    public static push.message.Entity.Login parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static Entity.Login parseDelimitedFrom(java.io.InputStream input)
+    public static push.message.Entity.Login parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static Entity.Login parseDelimitedFrom(
+    public static push.message.Entity.Login parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Login parseFrom(
+    public static push.message.Entity.Login parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1065,7 +1065,7 @@ public final class Entity {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Entity.Login prototype) {
+    public static Builder newBuilder(push.message.Entity.Login prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1081,20 +1081,20 @@ public final class Entity {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Entity.LoginOrBuilder {
+       implements push.message.Entity.LoginOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Entity.internal_static_push_message_Login_descriptor;
+        return push.message.Entity.internal_static_push_message_Login_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Entity.internal_static_push_message_Login_fieldAccessorTable
+        return push.message.Entity.internal_static_push_message_Login_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entity.Login.class, Entity.Login.Builder.class);
+                push.message.Entity.Login.class, push.message.Entity.Login.Builder.class);
       }
 
-      // Construct using Entity.Login.newBuilder()
+      // Construct using push.message.Entity.Login.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1129,23 +1129,23 @@ public final class Entity {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Entity.internal_static_push_message_Login_descriptor;
+        return push.message.Entity.internal_static_push_message_Login_descriptor;
       }
 
-      public Entity.Login getDefaultInstanceForType() {
-        return Entity.Login.getDefaultInstance();
+      public push.message.Entity.Login getDefaultInstanceForType() {
+        return push.message.Entity.Login.getDefaultInstance();
       }
 
-      public Entity.Login build() {
-        Entity.Login result = buildPartial();
+      public push.message.Entity.Login build() {
+        push.message.Entity.Login result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public Entity.Login buildPartial() {
-        Entity.Login result = new Entity.Login(this);
+      public push.message.Entity.Login buildPartial() {
+        push.message.Entity.Login result = new push.message.Entity.Login(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1166,16 +1166,16 @@ public final class Entity {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entity.Login) {
-          return mergeFrom((Entity.Login)other);
+        if (other instanceof push.message.Entity.Login) {
+          return mergeFrom((push.message.Entity.Login)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entity.Login other) {
-        if (other == Entity.Login.getDefaultInstance()) return this;
+      public Builder mergeFrom(push.message.Entity.Login other) {
+        if (other == push.message.Entity.Login.getDefaultInstance()) return this;
         if (other.hasUid()) {
           bitField0_ |= 0x00000001;
           uid_ = other.uid_;
@@ -1205,11 +1205,11 @@ public final class Entity {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entity.Login parsedMessage = null;
+        push.message.Entity.Login parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entity.Login) e.getUnfinishedMessage();
+          parsedMessage = (push.message.Entity.Login) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1520,14 +1520,14 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Entity.internal_static_push_message_Logout_descriptor;
+      return push.message.Entity.internal_static_push_message_Logout_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Entity.internal_static_push_message_Logout_fieldAccessorTable
+      return push.message.Entity.internal_static_push_message_Logout_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entity.Logout.class, Entity.Logout.Builder.class);
+              push.message.Entity.Logout.class, push.message.Entity.Logout.Builder.class);
     }
 
     public static com.google.protobuf.Parser<Logout> PARSER =
@@ -1687,53 +1687,53 @@ public final class Entity {
       return super.writeReplace();
     }
 
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Logout parseFrom(byte[] data)
+    public static push.message.Entity.Logout parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Logout parseFrom(java.io.InputStream input)
+    public static push.message.Entity.Logout parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static Entity.Logout parseDelimitedFrom(java.io.InputStream input)
+    public static push.message.Entity.Logout parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static Entity.Logout parseDelimitedFrom(
+    public static push.message.Entity.Logout parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Logout parseFrom(
+    public static push.message.Entity.Logout parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1742,7 +1742,7 @@ public final class Entity {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Entity.Logout prototype) {
+    public static Builder newBuilder(push.message.Entity.Logout prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1758,20 +1758,20 @@ public final class Entity {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Entity.LogoutOrBuilder {
+       implements push.message.Entity.LogoutOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Entity.internal_static_push_message_Logout_descriptor;
+        return push.message.Entity.internal_static_push_message_Logout_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Entity.internal_static_push_message_Logout_fieldAccessorTable
+        return push.message.Entity.internal_static_push_message_Logout_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entity.Logout.class, Entity.Logout.Builder.class);
+                push.message.Entity.Logout.class, push.message.Entity.Logout.Builder.class);
       }
 
-      // Construct using Entity.Logout.newBuilder()
+      // Construct using push.message.Entity.Logout.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1804,23 +1804,23 @@ public final class Entity {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Entity.internal_static_push_message_Logout_descriptor;
+        return push.message.Entity.internal_static_push_message_Logout_descriptor;
       }
 
-      public Entity.Logout getDefaultInstanceForType() {
-        return Entity.Logout.getDefaultInstance();
+      public push.message.Entity.Logout getDefaultInstanceForType() {
+        return push.message.Entity.Logout.getDefaultInstance();
       }
 
-      public Entity.Logout build() {
-        Entity.Logout result = buildPartial();
+      public push.message.Entity.Logout build() {
+        push.message.Entity.Logout result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public Entity.Logout buildPartial() {
-        Entity.Logout result = new Entity.Logout(this);
+      public push.message.Entity.Logout buildPartial() {
+        push.message.Entity.Logout result = new push.message.Entity.Logout(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1837,16 +1837,16 @@ public final class Entity {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entity.Logout) {
-          return mergeFrom((Entity.Logout)other);
+        if (other instanceof push.message.Entity.Logout) {
+          return mergeFrom((push.message.Entity.Logout)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entity.Logout other) {
-        if (other == Entity.Logout.getDefaultInstance()) return this;
+      public Builder mergeFrom(push.message.Entity.Logout other) {
+        if (other == push.message.Entity.Logout.getDefaultInstance()) return this;
         if (other.hasUid()) {
           bitField0_ |= 0x00000001;
           uid_ = other.uid_;
@@ -1873,11 +1873,11 @@ public final class Entity {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entity.Logout parsedMessage = null;
+        push.message.Entity.Logout parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entity.Logout) e.getUnfinishedMessage();
+          parsedMessage = (push.message.Entity.Logout) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2114,6 +2114,21 @@ public final class Entity {
      * <code>optional int64 readAt = 5;</code>
      */
     long getReadAt();
+
+    // optional string messageId = 6;
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    boolean hasMessageId();
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    java.lang.String getMessageId();
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getMessageIdBytes();
   }
   /**
    * Protobuf type {@code push.message.Message}
@@ -2191,6 +2206,11 @@ public final class Entity {
               readAt_ = input.readInt64();
               break;
             }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              messageId_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2205,14 +2225,14 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Entity.internal_static_push_message_Message_descriptor;
+      return push.message.Entity.internal_static_push_message_Message_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Entity.internal_static_push_message_Message_fieldAccessorTable
+      return push.message.Entity.internal_static_push_message_Message_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entity.Message.class, Entity.Message.Builder.class);
+              push.message.Entity.Message.class, push.message.Entity.Message.Builder.class);
     }
 
     public static com.google.protobuf.Parser<Message> PARSER =
@@ -2392,12 +2412,56 @@ public final class Entity {
       return readAt_;
     }
 
+    // optional string messageId = 6;
+    public static final int MESSAGEID_FIELD_NUMBER = 6;
+    private java.lang.Object messageId_;
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    public boolean hasMessageId() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    public java.lang.String getMessageId() {
+      java.lang.Object ref = messageId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          messageId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string messageId = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMessageIdBytes() {
+      java.lang.Object ref = messageId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        messageId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       to_ = "";
       from_ = "";
       message_ = "";
       createAt_ = 0L;
       readAt_ = 0L;
+      messageId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2438,6 +2502,9 @@ public final class Entity {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt64(5, readAt_);
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, getMessageIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2467,6 +2534,10 @@ public final class Entity {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(5, readAt_);
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getMessageIdBytes());
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -2479,53 +2550,53 @@ public final class Entity {
       return super.writeReplace();
     }
 
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Message parseFrom(byte[] data)
+    public static push.message.Entity.Message parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Message parseFrom(java.io.InputStream input)
+    public static push.message.Entity.Message parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static Entity.Message parseDelimitedFrom(java.io.InputStream input)
+    public static push.message.Entity.Message parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static Entity.Message parseDelimitedFrom(
+    public static push.message.Entity.Message parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Message parseFrom(
+    public static push.message.Entity.Message parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2534,7 +2605,7 @@ public final class Entity {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Entity.Message prototype) {
+    public static Builder newBuilder(push.message.Entity.Message prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2550,20 +2621,20 @@ public final class Entity {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Entity.MessageOrBuilder {
+       implements push.message.Entity.MessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Entity.internal_static_push_message_Message_descriptor;
+        return push.message.Entity.internal_static_push_message_Message_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Entity.internal_static_push_message_Message_fieldAccessorTable
+        return push.message.Entity.internal_static_push_message_Message_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entity.Message.class, Entity.Message.Builder.class);
+                push.message.Entity.Message.class, push.message.Entity.Message.Builder.class);
       }
 
-      // Construct using Entity.Message.newBuilder()
+      // Construct using push.message.Entity.Message.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2593,6 +2664,8 @@ public final class Entity {
         bitField0_ = (bitField0_ & ~0x00000008);
         readAt_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000010);
+        messageId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -2602,23 +2675,23 @@ public final class Entity {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Entity.internal_static_push_message_Message_descriptor;
+        return push.message.Entity.internal_static_push_message_Message_descriptor;
       }
 
-      public Entity.Message getDefaultInstanceForType() {
-        return Entity.Message.getDefaultInstance();
+      public push.message.Entity.Message getDefaultInstanceForType() {
+        return push.message.Entity.Message.getDefaultInstance();
       }
 
-      public Entity.Message build() {
-        Entity.Message result = buildPartial();
+      public push.message.Entity.Message build() {
+        push.message.Entity.Message result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public Entity.Message buildPartial() {
-        Entity.Message result = new Entity.Message(this);
+      public push.message.Entity.Message buildPartial() {
+        push.message.Entity.Message result = new push.message.Entity.Message(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2641,22 +2714,26 @@ public final class Entity {
           to_bitField0_ |= 0x00000010;
         }
         result.readAt_ = readAt_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.messageId_ = messageId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entity.Message) {
-          return mergeFrom((Entity.Message)other);
+        if (other instanceof push.message.Entity.Message) {
+          return mergeFrom((push.message.Entity.Message)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entity.Message other) {
-        if (other == Entity.Message.getDefaultInstance()) return this;
+      public Builder mergeFrom(push.message.Entity.Message other) {
+        if (other == push.message.Entity.Message.getDefaultInstance()) return this;
         if (other.hasTo()) {
           bitField0_ |= 0x00000001;
           to_ = other.to_;
@@ -2677,6 +2754,11 @@ public final class Entity {
         }
         if (other.hasReadAt()) {
           setReadAt(other.getReadAt());
+        }
+        if (other.hasMessageId()) {
+          bitField0_ |= 0x00000020;
+          messageId_ = other.messageId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2702,11 +2784,11 @@ public final class Entity {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entity.Message parsedMessage = null;
+        push.message.Entity.Message parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entity.Message) e.getUnfinishedMessage();
+          parsedMessage = (push.message.Entity.Message) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3005,6 +3087,80 @@ public final class Entity {
         return this;
       }
 
+      // optional string messageId = 6;
+      private java.lang.Object messageId_ = "";
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public boolean hasMessageId() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public java.lang.String getMessageId() {
+        java.lang.Object ref = messageId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          messageId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMessageIdBytes() {
+        java.lang.Object ref = messageId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          messageId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public Builder setMessageId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        messageId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public Builder clearMessageId() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        messageId_ = getDefaultInstance().getMessageId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string messageId = 6;</code>
+       */
+      public Builder setMessageIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        messageId_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:push.message.Message)
     }
 
@@ -3104,14 +3260,14 @@ public final class Entity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Entity.internal_static_push_message_Ping_descriptor;
+      return push.message.Entity.internal_static_push_message_Ping_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Entity.internal_static_push_message_Ping_fieldAccessorTable
+      return push.message.Entity.internal_static_push_message_Ping_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entity.Ping.class, Entity.Ping.Builder.class);
+              push.message.Entity.Ping.class, push.message.Entity.Ping.Builder.class);
     }
 
     public static com.google.protobuf.Parser<Ping> PARSER =
@@ -3220,53 +3376,53 @@ public final class Entity {
       return super.writeReplace();
     }
 
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Ping parseFrom(byte[] data)
+    public static push.message.Entity.Ping parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entity.Ping parseFrom(java.io.InputStream input)
+    public static push.message.Entity.Ping parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static Entity.Ping parseDelimitedFrom(java.io.InputStream input)
+    public static push.message.Entity.Ping parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static Entity.Ping parseDelimitedFrom(
+    public static push.message.Entity.Ping parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static Entity.Ping parseFrom(
+    public static push.message.Entity.Ping parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3275,7 +3431,7 @@ public final class Entity {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Entity.Ping prototype) {
+    public static Builder newBuilder(push.message.Entity.Ping prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -3291,20 +3447,20 @@ public final class Entity {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Entity.PingOrBuilder {
+       implements push.message.Entity.PingOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Entity.internal_static_push_message_Ping_descriptor;
+        return push.message.Entity.internal_static_push_message_Ping_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Entity.internal_static_push_message_Ping_fieldAccessorTable
+        return push.message.Entity.internal_static_push_message_Ping_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entity.Ping.class, Entity.Ping.Builder.class);
+                push.message.Entity.Ping.class, push.message.Entity.Ping.Builder.class);
       }
 
-      // Construct using Entity.Ping.newBuilder()
+      // Construct using push.message.Entity.Ping.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3335,23 +3491,23 @@ public final class Entity {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Entity.internal_static_push_message_Ping_descriptor;
+        return push.message.Entity.internal_static_push_message_Ping_descriptor;
       }
 
-      public Entity.Ping getDefaultInstanceForType() {
-        return Entity.Ping.getDefaultInstance();
+      public push.message.Entity.Ping getDefaultInstanceForType() {
+        return push.message.Entity.Ping.getDefaultInstance();
       }
 
-      public Entity.Ping build() {
-        Entity.Ping result = buildPartial();
+      public push.message.Entity.Ping build() {
+        push.message.Entity.Ping result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public Entity.Ping buildPartial() {
-        Entity.Ping result = new Entity.Ping(this);
+      public push.message.Entity.Ping buildPartial() {
+        push.message.Entity.Ping result = new push.message.Entity.Ping(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3364,16 +3520,16 @@ public final class Entity {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entity.Ping) {
-          return mergeFrom((Entity.Ping)other);
+        if (other instanceof push.message.Entity.Ping) {
+          return mergeFrom((push.message.Entity.Ping)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entity.Ping other) {
-        if (other == Entity.Ping.getDefaultInstance()) return this;
+      public Builder mergeFrom(push.message.Entity.Ping other) {
+        if (other == push.message.Entity.Ping.getDefaultInstance()) return this;
         if (other.hasMessage()) {
           bitField0_ |= 0x00000001;
           message_ = other.message_;
@@ -3395,11 +3551,11 @@ public final class Entity {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entity.Ping parsedMessage = null;
+        push.message.Entity.Ping parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entity.Ping) e.getUnfinishedMessage();
+          parsedMessage = (push.message.Entity.Ping) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3501,44 +3657,44 @@ public final class Entity {
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
-      Entity.BaseEntity,
-      Entity.Login> login = com.google.protobuf.GeneratedMessage
+      push.message.Entity.BaseEntity,
+      push.message.Entity.Login> login = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
-        Entity.Login.class,
-        Entity.Login.getDefaultInstance());
+        push.message.Entity.Login.class,
+        push.message.Entity.Login.getDefaultInstance());
   public static final int MESSAGE_FIELD_NUMBER = 101;
   /**
    * <code>extend .push.message.BaseEntity { ... }</code>
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
-      Entity.BaseEntity,
-      Entity.Message> message = com.google.protobuf.GeneratedMessage
+      push.message.Entity.BaseEntity,
+      push.message.Entity.Message> message = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
-        Entity.Message.class,
-        Entity.Message.getDefaultInstance());
+        push.message.Entity.Message.class,
+        push.message.Entity.Message.getDefaultInstance());
   public static final int LOGOUT_FIELD_NUMBER = 102;
   /**
    * <code>extend .push.message.BaseEntity { ... }</code>
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
-      Entity.BaseEntity,
-      Entity.Logout> logout = com.google.protobuf.GeneratedMessage
+      push.message.Entity.BaseEntity,
+      push.message.Entity.Logout> logout = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
-        Entity.Logout.class,
-        Entity.Logout.getDefaultInstance());
+        push.message.Entity.Logout.class,
+        push.message.Entity.Logout.getDefaultInstance());
   public static final int PING_FIELD_NUMBER = 103;
   /**
    * <code>extend .push.message.BaseEntity { ... }</code>
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
-      Entity.BaseEntity,
-      Entity.Ping> ping = com.google.protobuf.GeneratedMessage
+      push.message.Entity.BaseEntity,
+      push.message.Entity.Ping> ping = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
-        Entity.Ping.class,
-        Entity.Ping.getDefaultInstance());
+        push.message.Entity.Ping.class,
+        push.message.Entity.Ping.getDefaultInstance());
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_push_message_BaseEntity_descriptor;
   private static
@@ -3578,17 +3734,17 @@ public final class Entity {
       "age.Type*\010\010d\020\200\200\200\200\002\";\n\005Login\022\013\n\003uid\030\001 \002(\t" +
       "\022\021\n\tauthToken\030\002 \001(\t\022\022\n\nactiveTime\030\003 \001(\003\"" +
       "(\n\006Logout\022\013\n\003uid\030\001 \002(\t\022\021\n\tauthToken\030\002 \001(" +
-      "\t\"V\n\007Message\022\n\n\002to\030\001 \002(\t\022\014\n\004from\030\002 \002(\t\022\017" +
+      "\t\"i\n\007Message\022\n\n\002to\030\001 \002(\t\022\014\n\004from\030\002 \002(\t\022\017" +
       "\n\007message\030\003 \002(\t\022\020\n\010createAt\030\004 \001(\003\022\016\n\006rea" +
-      "dAt\030\005 \001(\003\"\027\n\004Ping\022\017\n\007message\030\001 \002(\t*4\n\004Ty" +
-      "pe\022\t\n\005LOGIN\020\000\022\013\n\007MESSAGE\020\001\022\n\n\006LOGOUT\020\002\022\010" +
-      "\n\004PING\020\003:<\n\005login\022\030.push.message.BaseEnt",
-      "ity\030d \001(\0132\023.push.message.Login:@\n\007messag" +
-      "e\022\030.push.message.BaseEntity\030e \001(\0132\025.push" +
-      ".message.Message:>\n\006logout\022\030.push.messag" +
-      "e.BaseEntity\030f \001(\0132\024.push.message.Logout" +
-      "::\n\004ping\022\030.push.message.BaseEntity\030g \001(\013" +
-      "2\022.push.message.Ping"
+      "dAt\030\005 \001(\003\022\021\n\tmessageId\030\006 \001(\t\"\027\n\004Ping\022\017\n\007" +
+      "message\030\001 \002(\t*4\n\004Type\022\t\n\005LOGIN\020\000\022\013\n\007MESS" +
+      "AGE\020\001\022\n\n\006LOGOUT\020\002\022\010\n\004PING\020\003:<\n\005login\022\030.p",
+      "ush.message.BaseEntity\030d \001(\0132\023.push.mess" +
+      "age.Login:@\n\007message\022\030.push.message.Base" +
+      "Entity\030e \001(\0132\025.push.message.Message:>\n\006l" +
+      "ogout\022\030.push.message.BaseEntity\030f \001(\0132\024." +
+      "push.message.Logout::\n\004ping\022\030.push.messa" +
+      "ge.BaseEntity\030g \001(\0132\022.push.message.Ping"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3618,7 +3774,7 @@ public final class Entity {
           internal_static_push_message_Message_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_push_message_Message_descriptor,
-              new java.lang.String[] { "To", "From", "Message", "CreateAt", "ReadAt", });
+              new java.lang.String[] { "To", "From", "Message", "CreateAt", "ReadAt", "MessageId", });
           internal_static_push_message_Ping_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_push_message_Ping_fieldAccessorTable = new

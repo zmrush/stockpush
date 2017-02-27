@@ -7,10 +7,7 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
-import com.sun.javafx.binding.StringFormatter;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -209,6 +206,15 @@ public class PushServer {
                 String from=message.getFrom();
                 String content=message.getMessage();
                 String messageId=message.getMessageId();
+                ChannelHandlerContext chc=event.getChc();
+                //--------------------------------------------------------
+                Entity.Message.Builder reply= Entity.Message.newBuilder();
+                reply.setFrom("0");
+                reply.setTo(to);
+                reply.setMessageId(messageId);
+                Entity.BaseEntity.Builder builder2 = Entity.BaseEntity.newBuilder();
+                builder2.setType(Entity.Type.MESSAGE);
+                //--------------------------------------------------------
                 AbstractMessage abstractMessage=JSON.parseObject(content, AbstractMessage.class);
                 //没有登录或者不是本人发的消息不能够进行处理
                 if(clients.get(from)!=event.getChc())
@@ -226,14 +232,23 @@ public class PushServer {
                     }
                 }else if(abstractMessage.getType().equals("3")){
                     //只有管理员才能创建节点
-                    if(!administrators.contains(from))
+                    if(!administrators.contains(from)){
+                        reply.setMessage("fail");
+                        builder2.setExtension(Entity.message,reply.build());
+                        chc.writeAndFlush(builder2.build());
                         return;
+                    }
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
                         nodeDao.createNode(nodeBean);
-                        ctx.writeAndFlush(new Message());
+                        reply.setMessage("sucess");
+                        builder2.setExtension(Entity.message,reply.build());
+                        chc.writeAndFlush(builder2.build());
                     } catch (Exception e) {
                         logger.error("create node error",e);
+                        reply.setMessage("fail");
+                        builder2.setExtension(Entity.message,reply.build());
+                        chc.writeAndFlush(builder2.build());
                     }
                 }else if(abstractMessage.getType().equals("4")){
                     //只有管理员才能删除节点
