@@ -316,7 +316,7 @@ public class PushServer {
                     try {
                         int count = subscribeDao.unSubscribe(subscribeBean);
                         if(count==1){
-                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeid());
+                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeId());
                             sets.remove(event.getChc());
                             reply.setMessage("unSubscribe node sucess");
                             builder2.setExtension(Entity.message,reply.build());
