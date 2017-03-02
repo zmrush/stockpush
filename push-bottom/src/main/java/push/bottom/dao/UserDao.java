@@ -1,5 +1,8 @@
 package push.bottom.dao;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import push.bottom.message.Registration;
 import push.bottom.model.User;
 import push.datasource.DaoUtil;
@@ -13,6 +16,9 @@ import java.sql.ResultSet;
  * Created by mingzhu7 on 2017/2/14.
  */
 public class UserDao extends AbstractDao{
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
+
     public UserDao(XDataSource dataSource){
         super(dataSource);
     }
@@ -41,13 +47,18 @@ public class UserDao extends AbstractDao{
         );
     }
     public int createNewUser(final Registration registration) throws Exception{
-        int count=DaoUtil.insert(dataSource, registration, INSERTUSER, new DaoUtil.UpdateCallback<Registration>() {
-            public void before(PreparedStatement statement, Registration target) throws Exception {
-                statement.setString(1,registration.getUsername());
-                statement.setString(2,registration.getPassword());
-            }
-        });
-        return count;
+        try {
+            int count = DaoUtil.insert(dataSource, registration, INSERTUSER, new DaoUtil.UpdateCallback<Registration>() {
+                public void before(PreparedStatement statement, Registration target) throws Exception {
+                    statement.setString(1,registration.getUsername());
+                    statement.setString(2,registration.getPassword());
+                }
+            });
+            return count;
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            logger.error("该用户已经存在,不能重复创建");
+            return 0;
+        }
     }
 
     public static void main(String[] args) throws Exception{

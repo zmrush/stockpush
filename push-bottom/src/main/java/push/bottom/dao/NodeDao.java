@@ -28,15 +28,15 @@ public class NodeDao extends AbstractDao{
         try{
             int count=DaoUtil.insert(dataSource, nodeBean, CREATE_NODE_SQL, new DaoUtil.UpdateCallback<NodeBean>() {
                 public void before(PreparedStatement statement, NodeBean target) throws Exception {
-                    statement.setString(1,nodeBean.getNodename());
+                    statement.setString(1,nodeBean.getNodeName());
                     statement.setString(2,nodeBean.getDescription());
-                    statement.setInt(3,Integer.parseInt(nodeBean.getNodetype()));
+                    statement.setInt(3,Integer.parseInt(nodeBean.getNodeType()));
                 }
             });
             return count;
         }catch(MySQLIntegrityConstraintViolationException e){
-            logger.info("该节点已经存在");
-            return 1;
+            logger.error("该节点已经存在,不能重复创建");
+            return 0;
         }
     }
 
@@ -49,7 +49,7 @@ public class NodeDao extends AbstractDao{
     public int deleteNodeById(final NodeBean nodeBean) throws Exception{
         int count= DaoUtil.delete(dataSource,nodeBean,DELETE_NODE_BY_NODEID_SQL,new DaoUtil.UpdateCallback<NodeBean>(){
             public void before(PreparedStatement statement,NodeBean target) throws Exception{
-                statement.setInt(1,nodeBean.getNodeid());
+                statement.setInt(1,nodeBean.getNodeId());
             }
         });
         return count;
@@ -64,7 +64,7 @@ public class NodeDao extends AbstractDao{
     public int deleteNodeByName(final NodeBean nodeBean) throws Exception{
         int count= DaoUtil.delete(dataSource,nodeBean,DELETE_NODE_BY_NODENAME_SQL,new DaoUtil.UpdateCallback<NodeBean>(){
             public void before(PreparedStatement statement,NodeBean target) throws Exception{
-                statement.setString(1,nodeBean.getNodename());
+                statement.setString(1,nodeBean.getNodeName());
             }
         });
         return count;
@@ -91,28 +91,14 @@ public class NodeDao extends AbstractDao{
         String nodetype="0";
 
         NodeBean nodeBean =new NodeBean();
-        nodeBean.setNodename(nodename);
+        nodeBean.setNodeName(nodename);
         nodeBean.setDescription(description);
-        nodeBean.setNodetype(nodetype);
+        nodeBean.setNodeType(nodetype);
         int count = nodeDao.createNode(nodeBean);
         if(count==1){
             logger.info("创建节点："+nodename+"成功。");
         }
 
-
-//        NodeBean nodeBean1 =new NodeBean();
-//        nodeBean1.setNodeid(20);
-//        int count1 = nodeDao.deleteNodeById(nodeBean1);
-//        if(count1==1){
-//            logger.info("通过节点id:"+nodeBean1.getNodeid()+"，删除成功。");
-//        }
-//
-//        NodeBean nodeBean2 =new NodeBean();
-//        nodeBean2.setNodename("pushAllTest3");
-//        int count2 = nodeDao.deleteNodeByName(nodeBean2);
-//        if(count2==1){
-//            logger.info("通过节点名字:"+nodeBean2.getNodename()+"，删除成功。");
-//        }
     }
 
 }

@@ -37,13 +37,13 @@ public class SubscribeDao extends AbstractDao{
         try {
             int count = DaoUtil.insert(dataSource, subscribeBean, SUBSCRIBE_SQL, new DaoUtil.UpdateCallback<SubscribeBean>() {
                 public void before(PreparedStatement statement, SubscribeBean target) throws Exception {
-                    statement.setInt(1, subscribeBean.getNodeid());
+                    statement.setInt(1, subscribeBean.getNodeId());
                     statement.setString(2, subscribeBean.getUid());
                 }
             });
             return count;
         }catch (MySQLIntegrityConstraintViolationException e){
-            logger.info("该用户"+subscribeBean.getUid()+"已经订阅过节点id:"+subscribeBean.getNodeid());
+            logger.info("该用户"+subscribeBean.getUid()+"已经订阅过节点id:"+subscribeBean.getNodeId());
             return 1;
         }
     }
@@ -59,7 +59,7 @@ public class SubscribeDao extends AbstractDao{
         int count = DaoUtil.delete(dataSource, subscribeBean, UNSUBSCRIBE_SQL, new DaoUtil.UpdateCallback<SubscribeBean>() {
             public void before(PreparedStatement statement, SubscribeBean target) throws Exception {
                 statement.setString(1, subscribeBean.getUid());
-                statement.setInt(2, subscribeBean.getNodeid());
+                statement.setInt(2, subscribeBean.getNodeId());
             }
         });
         return count;
@@ -75,7 +75,7 @@ public class SubscribeDao extends AbstractDao{
         List<NodeBean> subscribeNodeList = DaoUtil.queryList(dataSource, QUERY_SUBSCRIBE_NODES_BY_NODENAME_SQL, new DaoUtil.QueryCallback<NodeBean>() {
             public NodeBean map(ResultSet rs) throws Exception {
                 NodeBean nodeBean= new NodeBean();
-                nodeBean.setNodeid(rs.getInt(1));
+                nodeBean.setNodeId(rs.getInt(1));
                 return nodeBean;
             }
 
@@ -100,7 +100,7 @@ public class SubscribeDao extends AbstractDao{
 
         List<NodeBean> subscribeNodeList =subscribeDao.querySubscribeNodeListByUid("lizheng1");
         for(NodeBean bean:subscribeNodeList){
-            System.out.println("节点id----》"+bean.getNodeid());
+            System.out.println("节点id----》"+bean.getNodeId());
         }
 
         int nodeid=3;
@@ -109,7 +109,7 @@ public class SubscribeDao extends AbstractDao{
         for(int i=6;i<=10;i++){
             SubscribeBean subscribeBean =new SubscribeBean();
             subscribeBean.setUid(uid+String.valueOf(i));
-            subscribeBean.setNodeid(nodeid);
+            subscribeBean.setNodeId(nodeid);
             int count = subscribeDao.subscribeNode(subscribeBean);
             System.out.println("订阅节点的个数-----》"+count);
         }

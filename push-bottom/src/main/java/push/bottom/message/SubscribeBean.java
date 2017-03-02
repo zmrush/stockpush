@@ -6,15 +6,15 @@ import push.message.AbstractMessage;
  * Created by lizheng on 2017/2/17.
  */
 public class SubscribeBean extends AbstractMessage{
-    private int  nodeid;//节点id
+    private int  nodeId;//节点id
     private String uid;//用户id，包括userid和设备id
 
-    public int getNodeid() {
-        return nodeid;
+    public int getNodeId() {
+        return nodeId;
     }
 
-    public void setNodeid(int nodeid) {
-        this.nodeid = nodeid;
+    public void setNodeId(int nodeId) {
+        this.nodeId = nodeId;
     }
 
     public String getUid() {

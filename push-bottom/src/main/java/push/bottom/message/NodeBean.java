@@ -6,26 +6,26 @@ import push.message.AbstractMessage;
  * Created by lizheng on 2017/2/17.
  */
 public class NodeBean extends AbstractMessage{
-    private int nodeid;//节点id
-    private String nodename;//节点名称
+    private int nodeId;//节点id
+    private String nodeName;//节点名称
     private String host;//host地址
     private String description;//节点描述
-    private String nodetype;
+    private String nodeType;
 
-    public int getNodeid() {
-        return nodeid;
+    public int getNodeId() {
+        return nodeId;
     }
 
-    public void setNodeid(int nodeid) {
-        this.nodeid = nodeid;
+    public void setNodeId(int nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public String getNodename() {
-        return nodename;
+    public String getNodeName() {
+        return nodeName;
     }
 
-    public void setNodename(String nodename) {
-        this.nodename = nodename;
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public String getHost() {
@@ -44,11 +44,11 @@ public class NodeBean extends AbstractMessage{
         this.description = description;
     }
 
-    public String getNodetype() {
-        return nodetype;
+    public String getNodeType() {
+        return nodeType;
     }
 
-    public void setNodetype(String nodetype) {
-        this.nodetype = nodetype;
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
     }
 }

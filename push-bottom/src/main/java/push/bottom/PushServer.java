@@ -17,6 +17,7 @@ import push.bottom.dao.UserDao;
 import push.bottom.message.NodeBean;
 import push.bottom.message.Registration;
 import push.bottom.message.SubscribeBean;
+import push.bottom.model.SendMessageEnum;
 import push.bottom.model.User;
 import push.io.*;
 import push.message.AbstractMessage;
@@ -168,12 +169,12 @@ public class PushServer {
                     clients.put(event.getUid(),event.getChc());
                     List<NodeBean> nodeList = subscribeDao.querySubscribeNodeListByUid(username);
                     for(int i=0;i<nodeList.size();i++){
-                        Set<ChannelHandlerContext> sets = codeClients.get(String.valueOf(nodeList.get(i).getNodeid()));
+                        Set<ChannelHandlerContext> sets = codeClients.get(String.valueOf(nodeList.get(i).getNodeId()));
                         if(sets==null){
                             //如果该节点的set不存在，则新建一个。
                             CopyOnWriteArraySet<ChannelHandlerContext> codeSet=new CopyOnWriteArraySet<ChannelHandlerContext>();
                             codeSet.add(event.getChc());
-                            Object isPut=codeClients.putIfAbsent(String.valueOf(nodeList.get(i).getNodeid()),codeSet);
+                            Object isPut=codeClients.putIfAbsent(String.valueOf(nodeList.get(i).getNodeId()),codeSet);
                             if(isPut!=null){
                                 codeClients.get(nodeList.get(i).toString()).add(event.getChc());
                             }
@@ -220,17 +221,25 @@ public class PushServer {
                 if(clients.get(from)!=event.getChc())
                     return;
                 //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
-                if(abstractMessage.getType().equals("1")){
+                if(abstractMessage.getType().equals(SendMessageEnum.REGIST_TYPE.getType())){
                     //只有管理员才能注册用户
-                    if(!administrators.contains(from))
+                    if(!administrators.contains(from)){
                         return;
+                    }
                     Registration registration= JSON.parseObject(content, Registration.class);
                     try {
-                        userDao.createNewUser(registration);
+                        int count = userDao.createNewUser(registration);
+                        if(count==1){
+                            reply.setMessage("create user sucess");
+                        }else{
+                            reply.setMessage("Forbidden duplicate create user! create user error...");
+                        }
+                        builder2.setExtension(Entity.message,reply.build());
+                        chc.writeAndFlush(builder2.build());
                     }catch (Exception e){
                         logger.error("create user error",e);
                     }
-                }else if(abstractMessage.getType().equals("3")){
+                }else if(abstractMessage.getType().equals(SendMessageEnum.SUBSCRIBE_TYPE.getType())){
                     //只有管理员才能创建节点
                     if(!administrators.contains(from)){
                         reply.setMessage("fail");
@@ -240,8 +249,12 @@ public class PushServer {
                     }
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
-                        nodeDao.createNode(nodeBean);
-                        reply.setMessage("sucess");
+                        int count = nodeDao.createNode(nodeBean);
+                        if(count ==1){
+                            reply.setMessage("create node sucess");
+                        }else{
+                            reply.setMessage("Forbidden duplicate create node! create node error...");
+                        }
                         builder2.setExtension(Entity.message,reply.build());
                         chc.writeAndFlush(builder2.build());
                     } catch (Exception e) {
@@ -250,17 +263,20 @@ public class PushServer {
                         builder2.setExtension(Entity.message,reply.build());
                         chc.writeAndFlush(builder2.build());
                     }
-                }else if(abstractMessage.getType().equals("4")){
+                }else if(abstractMessage.getType().equals(SendMessageEnum.DELATENODE_TYPE.getType())){
                     //只有管理员才能删除节点
                     if(!administrators.contains(from))
                         return;
                     NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
                     try {
                         nodeDao.deleteNodeByName(nodeBean);
+                        reply.setMessage("delete node sucess");
+                        builder2.setExtension(Entity.message,reply.build());
+                        chc.writeAndFlush(builder2.build());
                     } catch (Exception e) {
                         logger.error("delete node error",e);
                     }
-                }else if(abstractMessage.getType().equals("5")){
+                }else if(abstractMessage.getType().equals(SendMessageEnum.SUBSCRIBE_TYPE.getType())){
                     //只有管理员或者用户登录才能订阅节点
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
                     if(!subscribeBean.getUid().equals(from) && !administrators.contains(from))
@@ -269,25 +285,29 @@ public class PushServer {
                         int count = subscribeDao.subscribeNode(subscribeBean);
                         if(count==1){
                             //把该用户添加到codeClients里面
-                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeid());
+                            Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeId());
                             if(sets==null){
                                 //如果该节点的set不存在，则新建一个。
                                 CopyOnWriteArraySet<ChannelHandlerContext> codeSet=new CopyOnWriteArraySet<ChannelHandlerContext>();
                                 codeSet.add(event.getChc());
-                                Object isPut=codeClients.putIfAbsent(String.valueOf(subscribeBean.getNodeid()),codeSet);
+                                Object isPut=codeClients.putIfAbsent(String.valueOf(subscribeBean.getNodeId()),codeSet);
                                 if(isPut!=null){
-                                    codeClients.get(String.valueOf(subscribeBean.getNodeid())).add(event.getChc());
+                                    codeClients.get(String.valueOf(subscribeBean.getNodeId())).add(event.getChc());
                                 }
                             }else{
                                 //如果该节点的set存在，那么把这个用户添加进去
                                 sets.add(event.getChc());
                             }
 
+                            reply.setMessage("subscribe node sucess");
+                            builder2.setExtension(Entity.message,reply.build());
+                            chc.writeAndFlush(builder2.build());
+
                         }
                     } catch (Exception e) {
                         logger.error("subscribe node error",e);
                     }
-                }else if(abstractMessage.getType().equals("6")){
+                }else if(abstractMessage.getType().equals(SendMessageEnum.UNSUBSCRIBE_TYPE.getType())){
                     //只有管理员或者用户登录才能反订阅节点
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
                     if(!subscribeBean.getUid().equals(from) && !administrators.contains(from)) {
@@ -298,6 +318,9 @@ public class PushServer {
                         if(count==1){
                             Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeid());
                             sets.remove(event.getChc());
+                            reply.setMessage("unSubscribe node sucess");
+                            builder2.setExtension(Entity.message,reply.build());
+                            chc.writeAndFlush(builder2.build());
                         }
                     } catch (Exception e) {
                         logger.error("unSubscribe node error",e);
