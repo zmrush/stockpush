@@ -104,7 +104,7 @@ public class PushClient {
         try {
             this.sendDataSync(JSON.toJSONString(registration),UUID.randomUUID().toString());
             registFlag =true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             registFlag =false;
             logger.error("regist user error!");
         }
@@ -121,7 +121,7 @@ public class PushClient {
         try {
             this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
             createFlag = true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("create node error", e);
             createFlag = false;
         }
@@ -136,7 +136,7 @@ public class PushClient {
         try {
             this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
             deleteFlag = true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("delete node error", e);
             deleteFlag = false;
         }
@@ -152,7 +152,7 @@ public class PushClient {
         try {
             this.sendDataSync(JSON.toJSONString(subscribeBean),UUID.randomUUID().toString());
             subscribeFlag =true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("subscribe node error");
             subscribeFlag =false;
         }
@@ -168,7 +168,7 @@ public class PushClient {
         try {
             this.sendDataSync(JSON.toJSONString(subscribeBean),UUID.randomUUID().toString());
             unSubscribeFlag =true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("unSubscribe node error");
             unSubscribeFlag =false;
         }
@@ -193,7 +193,9 @@ public class PushClient {
     public static void main(String[] args) throws Exception{
         //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
         PushClient pushClient = new PushClient("10.10.104.84", 9988,"lizheng1", "123456");
-        for(;;) {
+
+        pushClient.createNode("lizhengTest","测试","0");
+        /*for(;;) {
             BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
             String line = bufferedInputStream.readLine();
             String[] strList=line.split(" ");
@@ -209,7 +211,8 @@ public class PushClient {
             //delete node Test
 //            nodeBean.setNodeName(strList[0]);
 //            nodeBean.setType(strList[1]);
-            pushClient.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
+//            pushClient.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
+
 
             //subscribe node Test
 //            SubscribeBean subscribeBean =new SubscribeBean();
@@ -217,7 +220,7 @@ public class PushClient {
 //            subscribeBean.setNodeid(Integer.valueOf(strList[1]));
 //            subscribeBean.setType(strList[2]);
 //            pushClient.sendData(JSON.toJSONString(subscribeBean));
-        }
+        }*/
     }
 
 

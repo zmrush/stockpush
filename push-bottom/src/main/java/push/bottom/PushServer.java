@@ -239,7 +239,7 @@ public class PushServer {
                     }catch (Exception e){
                         logger.error("create user error",e);
                     }
-                }else if(abstractMessage.getType().equals(SendMessageEnum.SUBSCRIBE_TYPE.getType())){
+                }else if(abstractMessage.getType().equals(SendMessageEnum.CREATENODE_TYPE.getType())){
                     //只有管理员才能创建节点
                     if(!administrators.contains(from)){
                         reply.setMessage("fail");
