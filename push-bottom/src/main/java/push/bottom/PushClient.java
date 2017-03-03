@@ -103,16 +103,14 @@ public class PushClient {
         registration.setType(SendMessageEnum.REGIST_TYPE.getType());
         try {
             this.sendDataSync(JSON.toJSONString(registration),UUID.randomUUID().toString());
-            registFlag =true;
         } catch (Exception e) {
-            registFlag =false;
             logger.error("regist user error!");
+            return false;
         }
-        return registFlag;
+        return true;
     }
 
     public boolean createNode(String nodeName,String description,String nodeType) throws Exception {
-        boolean createFlag;
         NodeBean nodeBean =new NodeBean();
         nodeBean.setNodeName(nodeName);
         nodeBean.setDescription(description);
@@ -120,43 +118,38 @@ public class PushClient {
         nodeBean.setType(SendMessageEnum.CREATENODE_TYPE.getType());//创建节点
         try {
             this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
-            createFlag = true;
         } catch (Exception e) {
             logger.error("create node error", e);
-            createFlag = false;
+            return false;
         }
-        return createFlag;
+        return true;
     }
 
     public boolean deleteNode(String nodeName) throws Exception{
-        boolean deleteFlag;
         NodeBean nodeBean =new NodeBean();
         nodeBean.setNodeName(nodeName);
         nodeBean.setType(SendMessageEnum.DELATENODE_TYPE.getType());//删除节点
         try {
             this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
-            deleteFlag = true;
         } catch (Exception e) {
             logger.error("delete node error", e);
-            deleteFlag = false;
+            return false;
         }
-        return deleteFlag;
+        return true;
     }
 
     public boolean subscribeNode(String uid,String nodeId) throws Exception{
-        boolean subscribeFlag;
         SubscribeBean subscribeBean =new SubscribeBean();
         subscribeBean.setUid(uid);
         subscribeBean.setNodeId(Integer.parseInt(nodeId));
         subscribeBean.setType(SendMessageEnum.SUBSCRIBE_TYPE.getType());
         try {
             this.sendDataSync(JSON.toJSONString(subscribeBean),UUID.randomUUID().toString());
-            subscribeFlag =true;
         } catch (Exception e) {
             logger.error("subscribe node error");
-            subscribeFlag =false;
+            return false;
         }
-        return subscribeFlag;
+        return true;
     }
 
     public boolean unSubscribe(String uid,String nodeId) throws Exception{
@@ -167,12 +160,11 @@ public class PushClient {
         subscribeBean.setType(SendMessageEnum.UNSUBSCRIBE_TYPE.getType());
         try {
             this.sendDataSync(JSON.toJSONString(subscribeBean),UUID.randomUUID().toString());
-            unSubscribeFlag =true;
         } catch (Exception e) {
             logger.error("unSubscribe node error");
-            unSubscribeFlag =false;
+            return false;
         }
-        return unSubscribeFlag;
+        return true;
     }
 
     /**
