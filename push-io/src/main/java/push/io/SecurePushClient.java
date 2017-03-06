@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.message.Entity;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.TrustManager;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -41,9 +44,13 @@ public class SecurePushClient {
     }
     public void start(){
         try {
-            final SslContext sslCtx = SslContextBuilder.forClient()
-                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-            spci = new SecurePushClientInitializer(sslCtx, this);
+            //final SslContext sslCtx = null;
+//            final SslContext sslCtx = SslContextBuilder.forClient()
+//                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            TrustManager tm = new SimpleTrustManager();
+            sslContext.init(null, new TrustManager[] { tm }, null);
+            spci = new SecurePushClientInitializer(sslContext, this);
         }catch (Exception e){
             logger.error("start error",e);
             throw new RuntimeException("client start error",e);

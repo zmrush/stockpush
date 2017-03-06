@@ -9,22 +9,30 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.registry.EventManager;
 import push.message.Entity;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 public class SecurePushClientInitializer extends ChannelInitializer<SocketChannel> {
     private static Logger logger= LoggerFactory.getLogger(SecurePushClientInitializer.class);
-    private final SslContext sslCtx;
+    //private final SslContext sslCtx;
+    private final SSLContext sslContext;
     private SecurePushClient spc;
     private EventManager<MessageEvent> eventManager=new EventManager<MessageEvent>("client-initialize-event-manager");
     private ExtensionRegistry registry;
-    public SecurePushClientInitializer(SslContext sslCtx,SecurePushClient spc) {
-        this.sslCtx = sslCtx;
+    public SecurePushClientInitializer(SSLContext sslCtx,SecurePushClient spc) {
+        this.sslContext = sslCtx;
         this.spc=spc;
         //我们不希望事件合并（丢失），所以设置这个interval为0，事实上这个默认是0，所以不会丢失事件
         eventManager.setInterval(0);
@@ -37,13 +45,33 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         eventManager.addListener(messageListener);
     }
 
+    class SimpleTrustManager implements X509TrustManager {
+        public void checkClientTrusted(X509Certificate[] x509Certificates,
+                                       String s) throws CertificateException {
+
+        }
+
+        public void checkServerTrusted(X509Certificate[] x509Certificates,
+                                       String s) throws CertificateException {
+
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
+
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         int rd=(int)(30*Math.random());
         pipeline.addLast("timeout", new IdleStateHandler(200, 180, 150+rd, TimeUnit.SECONDS));
-        pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
-
+        //------------------------------------------------------------------------------
+        //pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
+        SSLEngine sslEngine=sslContext.createSSLEngine(spc.host,spc.port);
+        sslEngine.setUseClientMode(true);
+        pipeline.addLast(new SslHandler(sslEngine));
+        //------------------------------------------------------------------------------
         // On top of the SSL handler, add the text line codec.
         //pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
         pipeline.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());

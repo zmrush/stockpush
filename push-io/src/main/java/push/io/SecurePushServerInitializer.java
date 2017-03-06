@@ -1,6 +1,8 @@
 package push.io;
 
 import com.google.protobuf.ExtensionRegistry;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -9,12 +11,25 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.registry.EventManager;
 import push.message.Entity;
 
+import javax.crypto.*;
+import javax.crypto.spec.PBEKeySpec;
+import javax.net.ssl.*;
+import java.io.File;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,15 +38,15 @@ import java.util.concurrent.TimeUnit;
 public class SecurePushServerInitializer extends ChannelInitializer<SocketChannel> {
     private static Logger logger= LoggerFactory.getLogger(SecurePushServerInitializer.class);
     private EventManager<ConnectionEvent> eventManager=new EventManager<ConnectionEvent>("server-initialize-event-manager");
-    private final SslContext sslCtx;
+    //private final SslContext sslCtx;
+    private final SSLContext sslContext;
     private ExtensionRegistry registry;
-    public SecurePushServerInitializer(SslContext sslCtx) {
-        this.sslCtx = sslCtx;
+    public SecurePushServerInitializer(SSLContext sslCtx) {
+        this.sslContext = sslCtx;
         eventManager.start();
         registry = ExtensionRegistry.newInstance();
         Entity.registerAllExtensions(registry);
     }
-
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         logger.debug("receive connect and initialize channel");
@@ -41,7 +56,14 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         // and accept any invalid certificates in the client side.
         // You will need something more complicated to identify both
         // and server in the real world.
-        pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+
+        //------------------------------------------------------------------------------
+        //pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+        SSLEngine sslEngine=sslContext.createSSLEngine();
+        sslEngine.setUseClientMode(false);
+        sslEngine.setWantClientAuth(true);
+        pipeline.addLast(new SslHandler(sslEngine));
+        //------------------------------------------------------------------------------
         //180秒的心跳检测，200秒之类必须受到回复,加上一定的随机性
         //int rd=(int)(10*Math.random());
         pipeline.addLast("timeout", new IdleStateHandler(200, 180, 180, TimeUnit.SECONDS));
