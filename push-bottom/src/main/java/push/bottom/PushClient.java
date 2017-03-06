@@ -86,7 +86,8 @@ public class PushClient {
                 logger.info("本次操作超时");
             }
         }catch (Exception e){
-            logger.error("",e);
+            logger.error("error",e);
+            throw new Exception(e.toString());
         }finally {
             writeLock.unlock();
             lockMap.remove(messageId);
