@@ -6,8 +6,8 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.model.message.Entity;
 import push.registry.EventManager;
-import push.message.Entity;
 
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
     private static Logger logger= LoggerFactory.getLogger(SecurePushServerHandler.class);

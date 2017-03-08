@@ -1,4 +1,4 @@
-package push.bottom.model;
+package push.middle.pojo;
 
 import java.sql.Timestamp;
 

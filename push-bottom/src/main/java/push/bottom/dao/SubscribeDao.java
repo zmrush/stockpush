@@ -3,11 +3,13 @@ package push.bottom.dao;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import push.bottom.message.NodeBean;
 import push.bottom.message.SubscribeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
+import push.datasource.DataSourceFactory;
 import push.datasource.XDataSource;
+import push.middle.pojo.NodeBean;
+import push.model.dao.AbstractDao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +18,7 @@ import java.util.List;
 /**
  * Created by lizheng on 2017/2/17.
  */
-public class SubscribeDao extends AbstractDao{
+public class SubscribeDao extends AbstractDao {
     private static final Logger logger = LoggerFactory.getLogger(SubscribeDao.class);
 
     public SubscribeDao(XDataSource dataSource){
@@ -88,14 +90,14 @@ public class SubscribeDao extends AbstractDao{
     }
 
     public static void main(String[] args) throws Exception{
-        push.datasource.DataSourceConfig dataSourceConfig=new DataSourceConfig();
+        DataSourceConfig dataSourceConfig=new DataSourceConfig();
         dataSourceConfig.setType("HikariCP");
         dataSourceConfig.setDriver("com.mysql.jdbc.Driver");
         dataSourceConfig.setUrl("jdbc:mysql://10.100.141.39:3306/tm_dte");
         dataSourceConfig.setUser("tm_dte");
         dataSourceConfig.setPassword("tm_dte123");
 
-        push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
+        DataSourceFactory dataSourceFactory = new DataSourceFactory(dataSourceConfig);
         SubscribeDao subscribeDao= new SubscribeDao(dataSourceFactory.build());
 
         List<NodeBean> subscribeNodeList =subscribeDao.querySubscribeNodeListByUid("lizheng1");

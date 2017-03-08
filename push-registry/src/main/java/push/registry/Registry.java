@@ -1,7 +1,5 @@
 package push.registry;
 
-import push.registry.listener.*;
-
 import java.util.List;
 
 /**
@@ -155,7 +153,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void addListener(String path, ChildrenListener listener);
+    void addListener(String path, push.registry.listener.ChildrenListener listener);
 
     /**
      * 监视该节点下子节点data的变化，以及子节点增加、删除
@@ -163,7 +161,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void addListener(String path, ChildrenDataListener listener);
+    void addListener(String path, push.registry.listener.ChildrenDataListener listener);
 
     /**
      * 监视该节点data的变化
@@ -171,7 +169,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void addListener(String path, PathListener listener);
+    void addListener(String path, push.registry.listener.PathListener listener);
 
     /**
      * 监视leader选举
@@ -179,7 +177,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void addListener(String path, LeaderListener listener);
+    void addListener(String path, push.registry.listener.LeaderListener listener);
 
     /**
      * 监视leader选举
@@ -187,12 +185,12 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void addListener(String path, ClusterListener listener);
+    void addListener(String path, push.registry.listener.ClusterListener listener);
 
     /**
      * 监视与server的连接
      */
-    void addListener(ConnectionListener listener);
+    void addListener(push.registry.listener.ConnectionListener listener);
 
     /**
      * 删除节点listener
@@ -200,7 +198,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void removeListener(String path, PathListener listener);
+    void removeListener(String path, push.registry.listener.PathListener listener);
 
     /**
      * 删除节点listener
@@ -208,7 +206,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void removeListener(String path, ChildrenListener listener);
+    void removeListener(String path, push.registry.listener.ChildrenListener listener);
 
     /**
      * 删除节点listener
@@ -216,7 +214,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void removeListener(String path, ChildrenDataListener listener);
+    void removeListener(String path, push.registry.listener.ChildrenDataListener listener);
 
     /**
      * 删除节点listener
@@ -224,7 +222,7 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void removeListener(String path, LeaderListener listener);
+    void removeListener(String path, push.registry.listener.LeaderListener listener);
 
     /**
      * 删除节点listener
@@ -232,10 +230,10 @@ public interface Registry{
      * @param path     全路径
      * @param listener 监听器
      */
-    void removeListener(String path, ClusterListener listener);
+    void removeListener(String path, push.registry.listener.ClusterListener listener);
 
     /**
      * 删除节点listener
      */
-    void removeListener(ConnectionListener listener);
+    void removeListener(push.registry.listener.ConnectionListener listener);
 }

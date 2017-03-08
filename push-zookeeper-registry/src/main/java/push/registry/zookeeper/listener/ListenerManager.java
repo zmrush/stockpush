@@ -1,9 +1,9 @@
 package push.registry.zookeeper.listener;
 
 
-import push.registry.zookeeper.ZKClient;
 import push.registry.listener.ConnectionEvent;
 import push.registry.listener.ConnectionListener;
+import push.registry.zookeeper.ZKClient;
 import push.registry.listener.LiveListener;
 import push.registry.EventListener;
 import push.registry.EventManager;

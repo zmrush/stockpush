@@ -32,8 +32,11 @@
     </bean>
 
 
-    <bean id="userDao" class="push.bottom.dao.UserDao">
+    <bean id="userDao" class="push.middle.dao.UserDao">
         <constructor-arg ref="dataSource"/>
     </bean>
 
+    <bean id="nodeDao" class="push.middle.dao.NodeDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
 </beans>

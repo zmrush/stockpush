@@ -2,11 +2,10 @@ package push.registry.zookeeper;
 
 import org.apache.zookeeper.CreateMode;
 import push.registry.PathData;
+import push.registry.listener.*;
 import push.registry.Registry;
 import push.registry.RegistryException;
 import push.registry.URL;
-import push.registry.listener.*;
-import push.registry.zookeeper.listener.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +19,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  */
 public class ZKRegistry implements Registry {
-    protected Map<String, AbstractLeaderManager> leaderManagers = new HashMap<String, AbstractLeaderManager>();
-    protected Map<String, PathManager> pathManagers = new HashMap<String, PathManager>();
-    protected Map<String, ChildrenManager> childrenManagers = new HashMap<String, ChildrenManager>();
-    protected Map<String, ChildrenDataManager> childrenDataManagers = new HashMap<String, ChildrenDataManager>();
+    protected Map<String, push.registry.zookeeper.listener.AbstractLeaderManager> leaderManagers = new HashMap<String, push.registry.zookeeper.listener.AbstractLeaderManager>();
+    protected Map<String, push.registry.zookeeper.listener.PathManager> pathManagers = new HashMap<String, push.registry.zookeeper.listener.PathManager>();
+    protected Map<String, push.registry.zookeeper.listener.ChildrenManager> childrenManagers = new HashMap<String, push.registry.zookeeper.listener.ChildrenManager>();
+    protected Map<String, push.registry.zookeeper.listener.ChildrenDataManager> childrenDataManagers = new HashMap<String, push.registry.zookeeper.listener.ChildrenDataManager>();
     protected List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<ConnectionListener>();
-    protected LiveManager liveManager;
+    protected push.registry.zookeeper.listener.LiveManager liveManager;
     protected ZKClient zkClient;
     protected URL url;
     protected boolean opened;
@@ -67,7 +66,7 @@ public class ZKRegistry implements Registry {
                 return;
             }
             zkClient = new ZKClient(url, connectionListeners);
-            liveManager = new LiveManager(zkClient);
+            liveManager = new push.registry.zookeeper.listener.LiveManager(zkClient);
             opened = true;
         } finally {
             lock.writeLock().unlock();
@@ -86,16 +85,16 @@ public class ZKRegistry implements Registry {
     public void close() throws RegistryException {
         lock.writeLock().lock();
         try {
-            for (AbstractLeaderManager leaderManager : leaderManagers.values()) {
+            for (push.registry.zookeeper.listener.AbstractLeaderManager leaderManager : leaderManagers.values()) {
                 leaderManager.close();
             }
-            for (PathManager pathManager : pathManagers.values()) {
+            for (push.registry.zookeeper.listener.PathManager pathManager : pathManagers.values()) {
                 pathManager.close();
             }
-            for (ChildrenManager childrenManager : childrenManagers.values()) {
+            for (push.registry.zookeeper.listener.ChildrenManager childrenManager : childrenManagers.values()) {
                 childrenManager.close();
             }
-            for (ChildrenDataManager childrenDataManager : childrenDataManagers.values()) {
+            for (push.registry.zookeeper.listener.ChildrenDataManager childrenDataManager : childrenDataManagers.values()) {
                 childrenDataManager.close();
             }
             leaderManagers.clear();
@@ -263,7 +262,7 @@ public class ZKRegistry implements Registry {
         }
         lock.readLock().lock();
         try {
-            AbstractLeaderManager leaderManager = leaderManagers.get(path);
+            push.registry.zookeeper.listener.AbstractLeaderManager leaderManager = leaderManagers.get(path);
             if (leaderManager == null) {
                 return false;
             }
@@ -333,11 +332,11 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             checkState();
-            ChildrenManager manager;
+            push.registry.zookeeper.listener.ChildrenManager manager;
             synchronized (childrenManagers) {
                 manager = childrenManagers.get(path);
                 if (manager == null) {
-                    manager = new ChildrenManager(zkClient, path);
+                    manager = new push.registry.zookeeper.listener.ChildrenManager(zkClient, path);
                     childrenManagers.put(path, manager);
                 }
             }
@@ -355,11 +354,11 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             checkState();
-            ChildrenDataManager manager;
+            push.registry.zookeeper.listener.ChildrenDataManager manager;
             synchronized (childrenManagers) {
                 manager = childrenDataManagers.get(path);
                 if (manager == null) {
-                    manager = new ChildrenDataManager(zkClient, path);
+                    manager = new push.registry.zookeeper.listener.ChildrenDataManager(zkClient, path);
                     childrenDataManagers.put(path, manager);
 
                 }
@@ -378,11 +377,11 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             checkState();
-            PathManager manager;
+            push.registry.zookeeper.listener.PathManager manager;
             synchronized (pathManagers) {
                 manager = pathManagers.get(path);
                 if (manager == null) {
-                    manager = new PathManager(zkClient, path);
+                    manager = new push.registry.zookeeper.listener.PathManager(zkClient, path);
                     pathManagers.put(path, manager);
 
                 }
@@ -401,11 +400,11 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             checkState();
-            LeaderManager manager;
+            push.registry.zookeeper.listener.LeaderManager manager;
             synchronized (leaderManagers) {
-                manager = (LeaderManager) leaderManagers.get(path);
+                manager = (push.registry.zookeeper.listener.LeaderManager) leaderManagers.get(path);
                 if (manager == null) {
-                    manager = new LeaderManager(zkClient, path);
+                    manager = new push.registry.zookeeper.listener.LeaderManager(zkClient, path);
                     leaderManagers.put(path, manager);
                 }
             }
@@ -423,11 +422,11 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             checkState();
-            ClusterManager manager;
+            push.registry.zookeeper.listener.ClusterManager manager;
             synchronized (leaderManagers) {
-                manager = (ClusterManager) leaderManagers.get(path);
+                manager = (push.registry.zookeeper.listener.ClusterManager) leaderManagers.get(path);
                 if (manager == null) {
-                    manager = new ClusterManager(zkClient, path, listener);
+                    manager = new push.registry.zookeeper.listener.ClusterManager(zkClient, path, listener);
                     leaderManagers.put(path, manager);
                 }
             }
@@ -465,7 +464,7 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             synchronized (pathManagers) {
-                PathManager manager = pathManagers.get(path);
+                push.registry.zookeeper.listener.PathManager manager = pathManagers.get(path);
                 if (manager != null) {
                     manager.removeListener(listener);
                 }
@@ -483,7 +482,7 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             synchronized (childrenManagers) {
-                ChildrenManager manager = childrenManagers.get(path);
+                push.registry.zookeeper.listener.ChildrenManager manager = childrenManagers.get(path);
                 if (manager != null) {
                     manager.removeListener(listener);
                 }
@@ -501,7 +500,7 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             synchronized (childrenDataManagers) {
-                ChildrenDataManager manager = childrenDataManagers.get(path);
+                push.registry.zookeeper.listener.ChildrenDataManager manager = childrenDataManagers.get(path);
                 if (manager != null) {
                     manager.removeListener(listener);
                 }
@@ -519,7 +518,7 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             synchronized (leaderManagers) {
-                AbstractLeaderManager manager = leaderManagers.get(path);
+                push.registry.zookeeper.listener.AbstractLeaderManager manager = leaderManagers.get(path);
                 if (manager != null) {
                     manager.removeListener(listener);
                 }
@@ -537,7 +536,7 @@ public class ZKRegistry implements Registry {
         lock.readLock().lock();
         try {
             synchronized (leaderManagers) {
-                AbstractLeaderManager manager = leaderManagers.get(path);
+                push.registry.zookeeper.listener.AbstractLeaderManager manager = leaderManagers.get(path);
                 if (manager != null) {
                     manager.removeListener(listener);
                 }

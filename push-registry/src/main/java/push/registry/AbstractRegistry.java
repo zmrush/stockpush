@@ -1,8 +1,6 @@
 package push.registry;
 
 
-import push.registry.listener.*;
-
 import java.util.List;
 
 /**
@@ -88,51 +86,51 @@ public abstract class AbstractRegistry implements Registry {
     }
 
     @Override
-    public void addListener(String path, ChildrenListener listener) {
+    public void addListener(String path, push.registry.listener.ChildrenListener listener) {
     }
 
     @Override
-    public void addListener(String path, ChildrenDataListener listener) {
+    public void addListener(String path, push.registry.listener.ChildrenDataListener listener) {
     }
 
     @Override
-    public void addListener(String path, PathListener listener) {
+    public void addListener(String path, push.registry.listener.PathListener listener) {
     }
 
     @Override
-    public void addListener(String path, LeaderListener listener) {
+    public void addListener(String path, push.registry.listener.LeaderListener listener) {
     }
 
     @Override
-    public void addListener(String path, ClusterListener listener) {
+    public void addListener(String path, push.registry.listener.ClusterListener listener) {
     }
 
     @Override
-    public void addListener(ConnectionListener listener) {
+    public void addListener(push.registry.listener.ConnectionListener listener) {
     }
 
     @Override
-    public void removeListener(String path, PathListener listener) {
+    public void removeListener(String path, push.registry.listener.PathListener listener) {
     }
 
     @Override
-    public void removeListener(String path, ChildrenListener listener) {
+    public void removeListener(String path, push.registry.listener.ChildrenListener listener) {
     }
 
     @Override
-    public void removeListener(String path, ChildrenDataListener listener) {
+    public void removeListener(String path, push.registry.listener.ChildrenDataListener listener) {
     }
 
     @Override
-    public void removeListener(String path, LeaderListener listener) {
+    public void removeListener(String path, push.registry.listener.LeaderListener listener) {
     }
 
     @Override
-    public void removeListener(String path, ClusterListener listener) {
+    public void removeListener(String path, push.registry.listener.ClusterListener listener) {
     }
 
     @Override
-    public void removeListener(ConnectionListener listener) {
+    public void removeListener(push.registry.listener.ConnectionListener listener) {
     }
 
     public String getType() {

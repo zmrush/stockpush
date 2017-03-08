@@ -1,7 +1,6 @@
 package push.registry;
 
 
-import push.registry.listener.*;
 import push.registry.util.PathUtil;
 
 import java.util.*;
@@ -19,21 +18,21 @@ public class RegistryMock implements Registry {
     //节点事件
     protected EventManager<NodeEvent> nodeEventManager = new EventManager<NodeEvent>(new NodeEventListener());
     //通知事件
-    protected EventManager<PathEvent> pathEventManager = new EventManager<PathEvent>();
-    protected EventManager<ChildrenEvent> childrenEventManager = new EventManager<ChildrenEvent>();
-    protected EventManager<LeaderEvent> leaderEventManager = new EventManager<LeaderEvent>();
-    protected EventManager<ClusterEvent> clusterEventManager = new EventManager<ClusterEvent>();
+    protected EventManager<push.registry.listener.PathEvent> pathEventManager = new EventManager<push.registry.listener.PathEvent>();
+    protected EventManager<push.registry.listener.ChildrenEvent> childrenEventManager = new EventManager<push.registry.listener.ChildrenEvent>();
+    protected EventManager<push.registry.listener.LeaderEvent> leaderEventManager = new EventManager<push.registry.listener.LeaderEvent>();
+    protected EventManager<push.registry.listener.ClusterEvent> clusterEventManager = new EventManager<push.registry.listener.ClusterEvent>();
     protected Status status = Status.CLOSED;
     protected Map<String, String> leaders = new HashMap<String, String>();
-    protected Map<String, Map<ChildrenListener, Node>> childrenListeners =
-            new HashMap<String, Map<ChildrenListener, Node>>();
-    protected Map<String, Map<ChildrenDataListener, Node>> childrenDataListeners =
-            new HashMap<String, Map<ChildrenDataListener, Node>>();
-    protected Map<String, Map<PathListener, Node>> pathListeners = new HashMap<String, Map<PathListener, Node>>();
-    protected Map<String, Map<LeaderListener, Node>> leaderListeners = new HashMap<String, Map<LeaderListener, Node>>();
-    protected Map<String, Map<ClusterListener, Node>> clusterListeners =
-            new HashMap<String, Map<ClusterListener, Node>>();
-    protected TreeSet<ConnectionListener> connectionListeners = new TreeSet<ConnectionListener>();
+    protected Map<String, Map<push.registry.listener.ChildrenListener, Node>> childrenListeners =
+            new HashMap<String, Map<push.registry.listener.ChildrenListener, Node>>();
+    protected Map<String, Map<push.registry.listener.ChildrenDataListener, Node>> childrenDataListeners =
+            new HashMap<String, Map<push.registry.listener.ChildrenDataListener, Node>>();
+    protected Map<String, Map<push.registry.listener.PathListener, Node>> pathListeners = new HashMap<String, Map<push.registry.listener.PathListener, Node>>();
+    protected Map<String, Map<push.registry.listener.LeaderListener, Node>> leaderListeners = new HashMap<String, Map<push.registry.listener.LeaderListener, Node>>();
+    protected Map<String, Map<push.registry.listener.ClusterListener, Node>> clusterListeners =
+            new HashMap<String, Map<push.registry.listener.ClusterListener, Node>>();
+    protected TreeSet<push.registry.listener.ConnectionListener> connectionListeners = new TreeSet<push.registry.listener.ConnectionListener>();
     protected ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     protected ReentrantReadWriteLock listenerLock = new ReentrantReadWriteLock();
 
@@ -320,7 +319,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(String path, ChildrenListener listener) {
+    public void addListener(String path, push.registry.listener.ChildrenListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -332,7 +331,7 @@ public class RegistryMock implements Registry {
                 //初始化事件
                 for (Node child : node.getChildren()) {
                     childrenEventManager
-                            .add(new ChildrenEvent(ChildrenEvent.ChildrenEventType.CHILD_CREATED, child.getName(),
+                            .add(new push.registry.listener.ChildrenEvent(push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_CREATED, child.getName(),
                                     null), listener);
                 }
             }
@@ -342,7 +341,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(String path, ChildrenDataListener listener) {
+    public void addListener(String path, push.registry.listener.ChildrenDataListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -354,7 +353,7 @@ public class RegistryMock implements Registry {
                 //初始化事件
                 for (Node child : node.getChildren()) {
                     childrenEventManager
-                            .add(new ChildrenEvent(ChildrenEvent.ChildrenEventType.CHILD_CREATED, child.getName(),
+                            .add(new push.registry.listener.ChildrenEvent(push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_CREATED, child.getName(),
                                     child.getData()), listener);
                 }
             }
@@ -364,7 +363,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(String path, PathListener listener) {
+    public void addListener(String path, push.registry.listener.PathListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -374,7 +373,7 @@ public class RegistryMock implements Registry {
             if (addEventListener(pathListeners, path, listener)) {
                 Node node = root.getDescendant(path);
                 if (node != null) {
-                    pathEventManager.add(new PathEvent(PathEvent.PathEventType.CREATED, node.getName(), node.getData()),
+                    pathEventManager.add(new push.registry.listener.PathEvent(push.registry.listener.PathEvent.PathEventType.CREATED, node.getName(), node.getData()),
                             listener);
                 }
             }
@@ -384,7 +383,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(String path, LeaderListener listener) {
+    public void addListener(String path, push.registry.listener.LeaderListener listener) {
         //创建选举临时节点
         if (listener == null || path == null || path.isEmpty()) {
             return;
@@ -408,7 +407,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(String path, ClusterListener listener) {
+    public void addListener(String path, push.registry.listener.ClusterListener listener) {
         //创建选举临时节点
         if (listener == null || path == null || path.isEmpty()) {
             return;
@@ -472,7 +471,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void addListener(ConnectionListener listener) {
+    public void addListener(push.registry.listener.ConnectionListener listener) {
         if (listener == null) {
             return;
         }
@@ -486,7 +485,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(String path, PathListener listener) {
+    public void removeListener(String path, push.registry.listener.PathListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -500,7 +499,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(String path, ChildrenListener listener) {
+    public void removeListener(String path, push.registry.listener.ChildrenListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -514,7 +513,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(String path, ChildrenDataListener listener) {
+    public void removeListener(String path, push.registry.listener.ChildrenDataListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -528,7 +527,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(String path, LeaderListener listener) {
+    public void removeListener(String path, push.registry.listener.LeaderListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -536,7 +535,7 @@ public class RegistryMock implements Registry {
         try {
             listenerLock.writeLock().lock();
             try {
-                Map<LeaderListener, Node> listeners = leaderListeners.get(path);
+                Map<push.registry.listener.LeaderListener, Node> listeners = leaderListeners.get(path);
                 Node node = null;
                 if (listeners != null) {
                     node = listeners.remove(listener);
@@ -558,7 +557,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(String path, ClusterListener listener) {
+    public void removeListener(String path, push.registry.listener.ClusterListener listener) {
         if (listener == null || path == null || path.isEmpty()) {
             return;
         }
@@ -566,7 +565,7 @@ public class RegistryMock implements Registry {
         try {
             listenerLock.writeLock().lock();
             try {
-                Map<ClusterListener, Node> listeners = clusterListeners.get(path);
+                Map<push.registry.listener.ClusterListener, Node> listeners = clusterListeners.get(path);
                 Node node = null;
                 if (listeners != null) {
                     node = listeners.remove(listener);
@@ -587,7 +586,7 @@ public class RegistryMock implements Registry {
     }
 
     @Override
-    public void removeListener(ConnectionListener listener) {
+    public void removeListener(push.registry.listener.ConnectionListener listener) {
         if (listener == null) {
             return;
         }
@@ -610,14 +609,14 @@ public class RegistryMock implements Registry {
      * @param node   节点
      * @param type   事件类型
      */
-    protected void createPathEvent(Node parent, Node node, PathEvent.PathEventType type) {
+    protected void createPathEvent(Node parent, Node node, push.registry.listener.PathEvent.PathEventType type) {
         if (node == null || parent == null) {
             return;
         }
-        Map<PathListener, Node> listeners = pathListeners.get(node.getPath());
+        Map<push.registry.listener.PathListener, Node> listeners = pathListeners.get(node.getPath());
         if (listeners != null && !listeners.isEmpty()) {
-            for (PathListener listener : listeners.keySet()) {
-                pathEventManager.add(new PathEvent(type, node.getName(), node.getData()), listener);
+            for (push.registry.listener.PathListener listener : listeners.keySet()) {
+                pathEventManager.add(new push.registry.listener.PathEvent(type, node.getName(), node.getData()), listener);
             }
         }
     }
@@ -629,14 +628,14 @@ public class RegistryMock implements Registry {
      * @param node   节点
      * @param type   事件类型
      */
-    protected void createChildrenEvent(Node parent, Node node, ChildrenEvent.ChildrenEventType type) {
+    protected void createChildrenEvent(Node parent, Node node, push.registry.listener.ChildrenEvent.ChildrenEventType type) {
         if (node == null || parent == null) {
             return;
         }
-        Map<ChildrenListener, Node> listeners = childrenListeners.get(parent.getPath());
+        Map<push.registry.listener.ChildrenListener, Node> listeners = childrenListeners.get(parent.getPath());
         if (listeners != null && !listeners.isEmpty()) {
-            for (ChildrenListener listener : listeners.keySet()) {
-                childrenEventManager.add(new ChildrenEvent(type, node.getName(), null), listener);
+            for (push.registry.listener.ChildrenListener listener : listeners.keySet()) {
+                childrenEventManager.add(new push.registry.listener.ChildrenEvent(type, node.getName(), null), listener);
             }
         }
     }
@@ -648,14 +647,14 @@ public class RegistryMock implements Registry {
      * @param node   节点
      * @param type   事件类型
      */
-    protected void createChildrenDataEvent(Node parent, Node node, ChildrenEvent.ChildrenEventType type) {
+    protected void createChildrenDataEvent(Node parent, Node node, push.registry.listener.ChildrenEvent.ChildrenEventType type) {
         if (node == null || parent == null) {
             return;
         }
-        Map<ChildrenDataListener, Node> listeners = childrenDataListeners.get(parent.getPath());
+        Map<push.registry.listener.ChildrenDataListener, Node> listeners = childrenDataListeners.get(parent.getPath());
         if (listeners != null) {
-            for (ChildrenDataListener listener : listeners.keySet()) {
-                childrenEventManager.add(new ChildrenEvent(type, node.getName(), node.getData()), listener);
+            for (push.registry.listener.ChildrenDataListener listener : listeners.keySet()) {
+                childrenEventManager.add(new push.registry.listener.ChildrenEvent(type, node.getName(), node.getData()), listener);
             }
         }
     }
@@ -670,12 +669,12 @@ public class RegistryMock implements Registry {
         if (node == null || parent == null) {
             return;
         }
-        Map<LeaderListener, Node> listeners = leaderListeners.get(parent.getPath());
+        Map<push.registry.listener.LeaderListener, Node> listeners = leaderListeners.get(parent.getPath());
         if (listeners != null && !listeners.isEmpty()) {
-            LeaderEvent.LeaderEventType type =
-                    parent.size() == 0 ? LeaderEvent.LeaderEventType.LOST : LeaderEvent.LeaderEventType.TAKE;
-            for (LeaderListener listener : listeners.keySet()) {
-                leaderEventManager.add(new LeaderEvent(type, parent.getName()), listener);
+            push.registry.listener.LeaderEvent.LeaderEventType type =
+                    parent.size() == 0 ? push.registry.listener.LeaderEvent.LeaderEventType.LOST : push.registry.listener.LeaderEvent.LeaderEventType.TAKE;
+            for (push.registry.listener.LeaderListener listener : listeners.keySet()) {
+                leaderEventManager.add(new push.registry.listener.LeaderEvent(type, parent.getName()), listener);
             }
         }
     }
@@ -690,15 +689,15 @@ public class RegistryMock implements Registry {
         if (node == null || parent == null) {
             return;
         }
-        Map<ClusterListener, Node> listeners = clusterListeners.get(parent.getPath());
+        Map<push.registry.listener.ClusterListener, Node> listeners = clusterListeners.get(parent.getPath());
         if (listeners != null && !listeners.isEmpty()) {
             //集群监听器
             List<PathData> states = new ArrayList<PathData>();
             for (Node child : parent.getChildren()) {
                 states.add(new PathData(child.getName(), child.getData()));
             }
-            for (ClusterListener listener : listeners.keySet()) {
-                clusterEventManager.add(new ClusterEvent(parent.getName(), states), listener);
+            for (push.registry.listener.ClusterListener listener : listeners.keySet()) {
+                clusterEventManager.add(new push.registry.listener.ClusterEvent(parent.getName(), states), listener);
             }
         }
     }
@@ -1031,7 +1030,7 @@ public class RegistryMock implements Registry {
         }
     }
 
-    protected class NodeEventListener implements push.registry.EventListener<NodeEvent> {
+    protected class NodeEventListener implements EventListener<NodeEvent> {
         @Override
         public void onEvent(NodeEvent event) {
             Node current = event.getNode();
@@ -1043,18 +1042,18 @@ public class RegistryMock implements Registry {
             listenerLock.readLock().lock();
             try {
                 if (event.type == NodeEventType.ADD) {
-                    createPathEvent(parent, current, PathEvent.PathEventType.CREATED);
-                    createChildrenEvent(parent, current, ChildrenEvent.ChildrenEventType.CHILD_CREATED);
-                    createChildrenDataEvent(parent, current, ChildrenEvent.ChildrenEventType.CHILD_CREATED);
+                    createPathEvent(parent, current, push.registry.listener.PathEvent.PathEventType.CREATED);
+                    createChildrenEvent(parent, current, push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_CREATED);
+                    createChildrenDataEvent(parent, current, push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_CREATED);
                     createClusterEvent(parent, current);
                     createLeaderEvent(parent, current);
                 } else if (event.type == NodeEventType.UPDATE) {
-                    createPathEvent(parent, current, PathEvent.PathEventType.UPDATED);
-                    createChildrenDataEvent(parent, current, ChildrenEvent.ChildrenEventType.CHILD_UPDATED);
+                    createPathEvent(parent, current, push.registry.listener.PathEvent.PathEventType.UPDATED);
+                    createChildrenDataEvent(parent, current, push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_UPDATED);
                 } else if (event.type == NodeEventType.DELETE) {
-                    createPathEvent(parent, current, PathEvent.PathEventType.REMOVED);
-                    createChildrenEvent(parent, current, ChildrenEvent.ChildrenEventType.CHILD_REMOVED);
-                    createChildrenDataEvent(parent, current, ChildrenEvent.ChildrenEventType.CHILD_REMOVED);
+                    createPathEvent(parent, current, push.registry.listener.PathEvent.PathEventType.REMOVED);
+                    createChildrenEvent(parent, current, push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_REMOVED);
+                    createChildrenDataEvent(parent, current, push.registry.listener.ChildrenEvent.ChildrenEventType.CHILD_REMOVED);
                     createClusterEvent(parent, current);
                     createLeaderEvent(parent, current);
                 }

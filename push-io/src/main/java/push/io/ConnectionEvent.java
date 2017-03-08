@@ -1,7 +1,7 @@
 package push.io;
 
 import io.netty.channel.ChannelHandlerContext;
-import push.message.Entity;
+import push.model.message.Entity;
 
 /**
  * Created by mingzhu7 on 2017/1/5.

@@ -1,4 +1,4 @@
-package push.bottom.dao;
+package push.model.dao;
 
 import javax.sql.DataSource;
 

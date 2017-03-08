@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 import push.io.MessageEvent;
 import push.io.MessageListener;
 import push.io.SecurePushClient;
+import push.model.message.Entity;
 import push.registry.EventManager;
 import push.registry.URL;
 import push.registry.listener.ChildrenEvent;
 import push.registry.listener.ChildrenListener;
 import push.registry.util.PathUtil;
 import push.registry.zookeeper.ZKRegistry;
-import push.message.Entity;
 
 import java.io.InputStream;
 import java.util.*;
@@ -140,6 +140,9 @@ public class PushClient {
     public void addMesageListener(MessageListener messageListener){
         messageEventEventManager.addListener(messageListener);
     }
+
+
+
     public static void main(String[] args) throws Exception{
         PushClient pushClient=new PushClient();
         pushClient.start();

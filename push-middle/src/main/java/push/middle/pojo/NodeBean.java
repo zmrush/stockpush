@@ -1,11 +1,11 @@
-package push.bottom.message;
+package push.middle.pojo;
 
-import push.message.AbstractMessage;
+import push.model.message.AbstractMessage;
 
 /**
  * Created by lizheng on 2017/2/17.
  */
-public class NodeBean extends AbstractMessage{
+public class NodeBean extends AbstractMessage {
     private int nodeId;//节点id
     private String nodeName;//节点名称
     private String host;//host地址
