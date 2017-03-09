@@ -257,14 +257,14 @@ public class PushServer {
     }
 
 
-//    public static void main(String[] args) throws Exception{
-//        PushServer pushServer=new PushServer();
-//        pushServer.start();
-//        Thread.currentThread().sleep(5000);
-//        GroupMessage groupMessage = new GroupMessage();
-//        groupMessage.setNodeid(50);
-//        groupMessage.setMessage("netty测试发送公告");
-//        groupMessage.setMessageType("0");
-//        pushServer.broadCast(JSON.toJSONString(groupMessage));
-//    }
+    public static void main(String[] args) throws Exception{
+        PushServer pushServer=new PushServer();
+        pushServer.start();
+        Thread.currentThread().sleep(5000);
+        GroupMessage groupMessage = new GroupMessage();
+        groupMessage.setNodeid(50);
+        groupMessage.setMessage("netty测试发送公告");
+        groupMessage.setMessageType("0");
+        pushServer.broadCast(JSON.toJSONString(groupMessage));
+    }
 }

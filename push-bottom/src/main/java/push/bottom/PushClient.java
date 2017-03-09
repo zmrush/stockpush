@@ -124,7 +124,7 @@ public class PushClient {
      * @param args
      * @throws Exception
      */
-/*    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception{
         String uid ="lizheng";
         for(int i=1;i<=10;i++) {
             PushClient pushClient = new PushClient("10.10.104.84", 9988,uid+String.valueOf(i), "123456");
@@ -132,6 +132,6 @@ public class PushClient {
         }
 
         Thread.currentThread().sleep(10000000);
-    }*/
+    }
 
 }
