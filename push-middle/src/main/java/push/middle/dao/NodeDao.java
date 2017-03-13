@@ -57,6 +57,7 @@ public class NodeDao extends AbstractDao {
         return count;
     }
 
+    public
     /**
      * 根据nodename删除节点
      * @param nodeBean

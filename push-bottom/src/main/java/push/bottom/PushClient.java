@@ -126,7 +126,7 @@ public class PushClient {
      */
     public static void main(String[] args) throws Exception{
         String uid ="lizheng";
-        for(int i=1;i<=10;i++) {
+        for(int i=1;i<=1;i++) {
             PushClient pushClient = new PushClient("10.10.104.84", 9988,uid+String.valueOf(i), "123456");
             //PushClient pushClient = new PushClient("10.100.138.174", 9988, String.valueOf(i), "123456");
         }

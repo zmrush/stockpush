@@ -20,7 +20,9 @@ import push.registry.util.PathUtil;
 import push.registry.zookeeper.ZKRegistry;
 import push.model.message.Entity;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -128,9 +130,9 @@ public class PushServer {
     }
 
     //公告类推送
-    public void publish(String nodeId,String message,String messageType) throws Exception{
+    public void publish(String nodeName,String message,String messageType) throws Exception{
         GroupMessage groupMessage=new GroupMessage();
-        groupMessage.setNodeid(Integer.parseInt(nodeId));
+        groupMessage.setNodeid(nodeId);
         groupMessage.setMessage(message);
         groupMessage.setMessageType(messageType);
         groupMessage.setType(SendMessageEnum.SENDMESSAGE_TYPE.getType());
@@ -261,10 +263,18 @@ public class PushServer {
         PushServer pushServer=new PushServer();
         pushServer.start();
         Thread.currentThread().sleep(5000);
-        GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setNodeid(50);
-        groupMessage.setMessage("netty测试发送公告");
-        groupMessage.setMessageType("0");
-        pushServer.broadCast(JSON.toJSONString(groupMessage));
+        for(;;){
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+            String line=br.readLine();
+            String[] lines = line.split("#");
+            GroupMessage groupMessage = new GroupMessage();
+            groupMessage.setNodeid(Integer.parseInt(lines[0]));
+            groupMessage.setMessage(lines[1]);
+            groupMessage.setMessageType(lines[2]);
+            pushServer.publish(groupMessage.getNodeid(),groupMessage.getMessage(),groupMessage.getMessageType());
+            pushServer.broadCast(JSON.toJSONString(groupMessage));
+        }
+
+
     }
 }

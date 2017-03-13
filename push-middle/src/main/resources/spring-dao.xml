@@ -39,4 +39,8 @@
     <bean id="nodeDao" class="push.middle.dao.NodeDao">
         <constructor-arg ref="dataSource"/>
     </bean>
+
+    <bean id="saveMessageDao" class="push.middle.dao.SaveMessageDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
 </beans>

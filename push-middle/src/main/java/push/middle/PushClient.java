@@ -145,11 +145,11 @@ public class PushClient {
 
     public static void main(String[] args) throws Exception{
         PushClient pushClient=new PushClient();
+
         pushClient.start();
-        Thread.currentThread().sleep(10000);
+        Thread.currentThread().sleep(3000);
 //        System.out.println("start");
         pushClient.addMesageListener(new PrintMessageListener());
-        Thread.currentThread().sleep(2000000000);
 
     }
 }
