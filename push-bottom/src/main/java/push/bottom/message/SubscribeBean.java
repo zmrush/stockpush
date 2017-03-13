@@ -1,6 +1,6 @@
 package push.bottom.message;
 
-import push.message.AbstractMessage;
+import push.model.message.AbstractMessage;
 
 /**
  * Created by lizheng on 2017/2/17.

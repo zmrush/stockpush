@@ -1,6 +1,7 @@
 package push.bottom;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lmax.disruptor.EventFactory;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.RingBuffer;
@@ -11,22 +12,19 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import push.bottom.dao.NodeDao;
 import push.bottom.dao.SubscribeDao;
 import push.bottom.dao.UserDao;
-import push.bottom.message.NodeBean;
-import push.bottom.message.Registration;
 import push.bottom.message.SubscribeBean;
-import push.bottom.model.SendMessageEnum;
-import push.bottom.model.User;
+import push.bottom.message.User;
 import push.io.*;
-import push.message.AbstractMessage;
-import push.message.Entity;
-import push.message.GroupMessage;
-import push.middle.*;
 import push.middle.PushClient;
+import push.middle.dao.NodeDao;
+import push.middle.pojo.NodeBean;
+import push.model.message.AbstractMessage;
+import push.model.message.Entity;
+import push.model.message.GroupMessage;
+import push.model.message.SendMessageEnum;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -152,8 +150,7 @@ public class PushServer {
             if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_TRANSIENT){
                 logger.info("put inactive channel");
                 inactiveChannel.put(event.getChc(),System.currentTimeMillis());
-            }
-            else if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_ADD){
+            }else if(event.getCet()== ConnectionEvent.ConnectionEventType.CONNECTION_ADD){
                 logger.info("remove inavtive channel size:"+inactiveChannel.size());
                 inactiveChannel.remove(event.getChc());
                 Entity.Login login=event.getMessage().getExtension(Entity.login);
@@ -221,61 +218,13 @@ public class PushServer {
                 if(clients.get(from)!=event.getChc())
                     return;
                 //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
-                if(abstractMessage.getType().equals(SendMessageEnum.REGIST_TYPE.getType())){
-                    //只有管理员才能注册用户
-                    if(!administrators.contains(from)){
-                        return;
+                if(abstractMessage.getType().equals("2")){
+                    GroupMessage groupMessage=JSONObject.parseObject(content,GroupMessage.class);
+                    Set<ChannelHandlerContext> clients=codeClients.get(groupMessage.getNodeid());
+                    for(ChannelHandlerContext client:clients){
+                        client.writeAndFlush(groupMessage.getMessage());
                     }
-                    Registration registration= JSON.parseObject(content, Registration.class);
-                    try {
-                        int count = userDao.createNewUser(registration);
-                        if(count==1){
-                            reply.setMessage("create user sucess");
-                        }else{
-                            reply.setMessage("Forbidden duplicate create user! create user error...");
-                        }
-                        builder2.setExtension(Entity.message,reply.build());
-                        chc.writeAndFlush(builder2.build());
-                    }catch (Exception e){
-                        logger.error("create user error",e);
-                    }
-                }else if(abstractMessage.getType().equals(SendMessageEnum.CREATENODE_TYPE.getType())){
-                    //只有管理员才能创建节点
-                    if(!administrators.contains(from)){
-                        reply.setMessage("fail");
-                        builder2.setExtension(Entity.message,reply.build());
-                        chc.writeAndFlush(builder2.build());
-                        return;
-                    }
-                    NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
-                    try {
-                        int count = nodeDao.createNode(nodeBean);
-                        if(count ==1){
-                            reply.setMessage("create node sucess");
-                        }else{
-                            reply.setMessage("Forbidden duplicate create node! create node error...");
-                        }
-                        builder2.setExtension(Entity.message,reply.build());
-                        chc.writeAndFlush(builder2.build());
-                    } catch (Exception e) {
-                        logger.error("create node error",e);
-                        reply.setMessage("fail");
-                        builder2.setExtension(Entity.message,reply.build());
-                        chc.writeAndFlush(builder2.build());
-                    }
-                }else if(abstractMessage.getType().equals(SendMessageEnum.DELATENODE_TYPE.getType())){
-                    //只有管理员才能删除节点
-                    if(!administrators.contains(from))
-                        return;
-                    NodeBean nodeBean = JSON.parseObject(content,NodeBean.class);
-                    try {
-                        nodeDao.deleteNodeByName(nodeBean);
-                        reply.setMessage("delete node sucess");
-                        builder2.setExtension(Entity.message,reply.build());
-                        chc.writeAndFlush(builder2.build());
-                    } catch (Exception e) {
-                        logger.error("delete node error",e);
-                    }
+                    return;
                 }else if(abstractMessage.getType().equals(SendMessageEnum.SUBSCRIBE_TYPE.getType())){
                     //只有管理员或者用户登录才能订阅节点
                     SubscribeBean subscribeBean =JSON.parseObject(content,SubscribeBean.class);
@@ -300,6 +249,7 @@ public class PushServer {
                             }
 
                             reply.setMessage("subscribe node sucess");
+                            logger.info("subscribe node sucess");
                             builder2.setExtension(Entity.message,reply.build());
                             chc.writeAndFlush(builder2.build());
 
@@ -319,13 +269,36 @@ public class PushServer {
                             Set<ChannelHandlerContext> sets = codeClients.get(subscribeBean.getNodeId());
                             sets.remove(event.getChc());
                             reply.setMessage("unSubscribe node sucess");
+                            logger.info("unSubscribe node sucess");
                             builder2.setExtension(Entity.message,reply.build());
                             chc.writeAndFlush(builder2.build());
                         }
                     } catch (Exception e) {
                         logger.error("unSubscribe node error",e);
                     }
+                }else if(abstractMessage.getType().equals(SendMessageEnum.SENDMESSAGE_TYPE.getType())){
+                    //群发消息
+                    if(!administrators.contains(from)){
+                        return;
+                    }
+
+                    GroupMessage groupMessage=JSON.parseObject(content, GroupMessage.class);
+                    reply.setMessage(groupMessage.getMessage());
+                    builder2.setExtension(Entity.message,reply.build());
+                    Set<ChannelHandlerContext> sets = codeClients.get(groupMessage.getNodeid());
+                    Iterator<ChannelHandlerContext> iter=sets.iterator();
+                    while (iter.hasNext()){
+                        try {
+                            ChannelHandlerContext singleChannel = iter.next();
+                            singleChannel.writeAndFlush(builder2.build());
+                        }catch (Exception e){
+                            logger.error("push-bottom broad cast error",e);
+                            throw new RuntimeException("push-bottom broad cast error",e);
+                        }
+                    }
+
                 }
+
 
             }
         }
@@ -333,7 +306,7 @@ public class PushServer {
     //---------------------------------------------------------------------------------------
 
     //负责监听服务端传送过来的数据
-    public class BottomMessageLitener implements MessageListener{
+    public class BottomMessageLitener implements MessageListener {
 
         public void onEvent(MessageEvent event) {
             messageEventProducer.onData(event);
@@ -435,11 +408,6 @@ public class PushServer {
         }
     }
 
-//    public static void main(String[] args) throws Exception{
-//        PushServer pushServer=new PushServer(9988);
-//        pushServer.start();
-//        Thread.currentThread().sleep(10000000);
-//    }
     public static void main(String[] args){
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring-*.xml");
         ctx.registerShutdownHook();

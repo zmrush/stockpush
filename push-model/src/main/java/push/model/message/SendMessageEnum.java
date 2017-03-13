@@ -1,4 +1,4 @@
-package push.bottom.model;
+package push.model.message;
 
 /**
  * Created by lizheng on 2017/3/1.
@@ -6,6 +6,7 @@ package push.bottom.model;
 public enum SendMessageEnum {
     //1:注册用户。2:群发消息。3:创建节点。4:删除节点。5：订阅节点。6：反订阅节点
     REGIST_TYPE("1"),
+    SENDMESSAGE_TYPE("2"),
     CREATENODE_TYPE("3"),
     DELATENODE_TYPE("4"),
     SUBSCRIBE_TYPE("5"),

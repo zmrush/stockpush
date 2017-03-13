@@ -1,9 +1,9 @@
 package push.registry.zookeeper.listener;
 
 
+import push.registry.PathData;
 import push.registry.listener.ConnectionEvent;
 import push.registry.listener.ConnectionListener;
-import push.registry.PathData;
 import push.registry.zookeeper.ZKClient;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;

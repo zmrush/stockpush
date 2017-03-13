@@ -1,19 +1,21 @@
-package push.bottom.dao;
+package push.middle.dao;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import push.bottom.message.NodeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
+import push.datasource.DataSourceFactory;
 import push.datasource.XDataSource;
+import push.middle.pojo.NodeBean;
+import push.model.dao.AbstractDao;
 
 import java.sql.PreparedStatement;
 
 /**
  * Created by lizheng on 2017/2/17.
  */
-public class NodeDao extends AbstractDao{
+public class NodeDao extends AbstractDao {
     private static final Logger logger= LoggerFactory.getLogger(NodeDao.class);
 
     public NodeDao(XDataSource dataSource){
@@ -76,14 +78,14 @@ public class NodeDao extends AbstractDao{
      * @throws Exception
      */
     public static void main(String[] args) throws Exception{
-        push.datasource.DataSourceConfig dataSourceConfig=new DataSourceConfig();
+        DataSourceConfig dataSourceConfig=new DataSourceConfig();
         dataSourceConfig.setType("HikariCP");
         dataSourceConfig.setDriver("com.mysql.jdbc.Driver");
         dataSourceConfig.setUrl("jdbc:mysql://10.100.141.39:3306/tm_dte");
         dataSourceConfig.setUser("tm_dte");
         dataSourceConfig.setPassword("tm_dte123");
 
-        push.datasource.DataSourceFactory dataSourceFactory = new push.datasource.DataSourceFactory(dataSourceConfig);
+        DataSourceFactory dataSourceFactory = new DataSourceFactory(dataSourceConfig);
         NodeDao nodeDao= new NodeDao(dataSourceFactory.build());
 
         String nodename ="pushAllTest5";

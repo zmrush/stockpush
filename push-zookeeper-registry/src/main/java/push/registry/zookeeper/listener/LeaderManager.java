@@ -2,10 +2,9 @@ package push.registry.zookeeper.listener;
 
 
 import push.registry.listener.LeaderEvent;
-import push.registry.listener.LeaderEvent.LeaderEventType;
-import push.registry.zookeeper.ZKClient;
 import push.registry.listener.LeaderListener;
 import push.registry.util.PathUtil;
+import push.registry.zookeeper.ZKClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,7 @@ public class LeaderManager extends AbstractLeaderManager<LeaderListener, LeaderE
                 if (logger.isDebugEnabled()) {
                     logger.debug("lost leader." + PathUtil.makePath(path, myName.get()));
                 }
-                eventManager.add(new LeaderEvent(LeaderEventType.LOST, path));
+                eventManager.add(new LeaderEvent(LeaderEvent.LeaderEventType.LOST, path));
             }
         } finally {
             lock.writeLock().unlock();
@@ -56,7 +55,7 @@ public class LeaderManager extends AbstractLeaderManager<LeaderListener, LeaderE
                     updateManager.add(UpdateType.UPDATE);
                 } else if (leader.get()) {
                     //当前已经是Leader，广播Take事件给该监听器进行初始化
-                    LeaderEvent event = new LeaderEvent(LeaderEventType.TAKE, path);
+                    LeaderEvent event = new LeaderEvent(LeaderEvent.LeaderEventType.TAKE, path);
                     eventManager.add(event, listener);
                 }
             }
@@ -72,19 +71,19 @@ public class LeaderManager extends AbstractLeaderManager<LeaderListener, LeaderE
         List<String> children = zkClient.getChildren(path, updateWatcher);
         Collections.sort(children);
         if (children.isEmpty()) {
-            eventManager.add(new LeaderEvent(LeaderEventType.LOST, path));
+            eventManager.add(new LeaderEvent(LeaderEvent.LeaderEventType.LOST, path));
         } else {
             String leaderName = children.get(0);
             if (leader.get() && !leaderName.equals(myName.get())) {
                 // 以前是leader，现在不是leader
-                eventManager.add(new LeaderEvent(LeaderEventType.LOST, path));
+                eventManager.add(new LeaderEvent(LeaderEvent.LeaderEventType.LOST, path));
                 leader.set(false);
                 if (logger.isDebugEnabled()) {
                     logger.debug("lost leader." + PathUtil.makePath(path, leaderName));
                 }
             } else if (!leader.get() && leaderName.equals(myName.get())) {
                 // 以前不是leader，现在是leader
-                eventManager.add(new LeaderEvent(LeaderEventType.TAKE, path));
+                eventManager.add(new LeaderEvent(LeaderEvent.LeaderEventType.TAKE, path));
                 leader.set(true);
                 if (logger.isDebugEnabled()) {
                     logger.debug("take leader." + PathUtil.makePath(path, leaderName));

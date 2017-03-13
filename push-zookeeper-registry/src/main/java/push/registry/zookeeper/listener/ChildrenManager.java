@@ -1,12 +1,12 @@
 package push.registry.zookeeper.listener;
 
 
-import push.registry.listener.ChildrenEvent;
-import push.registry.listener.ChildrenEvent.ChildrenEventType;
 import push.registry.listener.ChildrenListener;
 import push.registry.listener.LiveListener;
 import push.registry.util.PathUtil;
 import push.registry.zookeeper.ZKClient;
+import push.registry.listener.ChildrenEvent;
+import push.registry.listener.ChildrenEvent.ChildrenEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

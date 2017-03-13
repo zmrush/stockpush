@@ -1,4 +1,4 @@
-package push.message;
+package push.model.message;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

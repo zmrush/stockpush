@@ -5,7 +5,6 @@ import push.registry.EventManager;
 import push.registry.PathData;
 import push.registry.URL;
 import push.registry.listener.ConnectionEvent;
-import push.registry.listener.ConnectionEvent.ConnectionEventType;
 import push.registry.listener.ConnectionListener;
 import push.registry.util.PathUtil;
 import org.apache.zookeeper.*;
@@ -629,7 +628,7 @@ public class ZKClient {
     public void addListener(ConnectionListener listener) {
         if (eventManager.addListener(listener)) {
             if (isConnected()) {
-                eventManager.add(new ConnectionEvent(ConnectionEventType.CONNECTED, url), listener);
+                eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.CONNECTED, url), listener);
             }
         }
     }
@@ -800,7 +799,7 @@ public class ZKClient {
         protected void onDisconnected() {
             // Disconnected -- zookeeper library will handle reconnects
             logger.info("Disconnected from Zookeeper,publishing suspended event.");
-            eventManager.add(new ConnectionEvent(ConnectionEventType.SUSPENDED, url));
+            eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.SUSPENDED, url));
             //尝试重新恢复连接
             taskManager.add(new ConnectionTask(ConnectionTaskType.RECONNECTION));
         }
@@ -810,7 +809,7 @@ public class ZKClient {
          */
         protected void onExpired() {
             logger.info("Zookeeper session is expired,publishing lost event.");
-            eventManager.add(new ConnectionEvent(ConnectionEventType.LOST, url));
+            eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.LOST, url));
             // Session was expired; create a new zookeeper connection
             taskManager.add(new ConnectionTask(ConnectionTaskType.CONNECTION));
         }
@@ -828,11 +827,11 @@ public class ZKClient {
                 if (oldSessionId != newSessionId) {
                     logger.info("SyncConnected to Zookeeper,publishing connected event.");
                     //session超时，sessionId改变了，则发布CONNECTED事件
-                    eventManager.add(new ConnectionEvent(ConnectionEventType.CONNECTED, url));
+                    eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.CONNECTED, url));
                 } else {
                     logger.info("Reconnected to Zookeeper,publishing reconnected event.");
                     //session没有超时，则发布RECONNECTED事件
-                    eventManager.add(new ConnectionEvent(ConnectionEventType.RECONNECTED, url));
+                    eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.RECONNECTED, url));
                 }
             }
 
@@ -897,7 +896,7 @@ public class ZKClient {
                 retryCount++;
                 //超过了指定的最大重试次数，则退出
                 if (connectionRetryTimes > 0 && retryCount >= connectionRetryTimes) {
-                    eventManager.add(new ConnectionEvent(ConnectionEventType.FAILED, url));
+                    eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.FAILED, url));
                     break;
                 }
                 //休息指定的间隔
@@ -952,7 +951,7 @@ public class ZKClient {
                 //判断是否Session失效了
                 if (task.getType() == ConnectionTaskType.RECONNECTION) {
                     //session失效，发通知
-                    eventManager.add(new ConnectionEvent(ConnectionEventType.LOST, url));
+                    eventManager.add(new ConnectionEvent(ConnectionEvent.ConnectionEventType.LOST, url));
                     //修改类型为CONNECTION
                     task.type = ConnectionTaskType.CONNECTION;
                 }

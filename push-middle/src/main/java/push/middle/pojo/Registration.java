@@ -1,6 +1,6 @@
-package push.bottom.message;
+package push.middle.pojo;
 
-import push.message.AbstractMessage;
+import push.model.message.AbstractMessage;
 
 /**
  * Created by mingzhu7 on 2017/2/15.

@@ -7,7 +7,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.registry.EventManager;
-import push.message.Entity;
+import push.model.message.Entity;
 
 /**
  * Handles a client-side channel.
