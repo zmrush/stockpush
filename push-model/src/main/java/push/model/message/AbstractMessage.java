@@ -1,4 +1,4 @@
-package push.message;
+package push.model.message;
 
 /**
  * Created by mingzhu7 on 2017/2/15.
