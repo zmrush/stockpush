@@ -110,7 +110,7 @@ public final class SecurePushServer {
 //        SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
 //                .build();
         //-----------------------------------------------------------------------------
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getInstance("TLSv1.1");
         TrustManager tm = new SimpleTrustManager();
         SelfSignedCertificate ssc = new SelfSignedCertificate();
         File keyCertChainFile=ssc.certificate();
@@ -133,6 +133,8 @@ public final class SecurePushServer {
             spsi=new SecurePushServerInitializer(sslContext);
             b.group(bossGroup, workerGroup)
                     .option(ChannelOption.TCP_NODELAY,true)
+                    .option(ChannelOption.SO_TIMEOUT,10000)
+                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,10000)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(spsi);

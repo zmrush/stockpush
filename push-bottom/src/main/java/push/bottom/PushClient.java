@@ -11,9 +11,12 @@ import push.io.MessageEvent;
 import push.io.MessageListener;
 import push.io.SecurePushClient;
 import push.message.Entity;
+import sun.misc.Unsafe;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -217,18 +220,37 @@ public class PushClient {
 //    }
 
 
+//    public static void main(String[] args) throws Exception{
+//        PushClient pushClient=new PushClient("127.0.0.1", 9988, String.valueOf(0), "123456");
+//        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
+//        String line;
+//        ConcurrentHashMap<String,Object> map=null;
+//        while((line=bufferedInputStream.readLine())!=null){
+//            Registration registration = new Registration();
+//            registration.setType("1");
+//            String[] strings=line.split(" ");
+//            registration.setUsername(strings[0]);
+//            registration.setPassword(strings[1]);
+//            pushClient.sendData(JSON.toJSONString(registration));
+//        }
+//    }
+
     public static void main(String[] args) throws Exception{
-        PushClient pushClient=new PushClient("10.10.104.103", 9988, String.valueOf(0), "123456");
-        BufferedReader bufferedInputStream=new BufferedReader(new InputStreamReader(System.in));
-        String line;
-        while((line=bufferedInputStream.readLine())!=null){
-            Registration registration = new Registration();
-            registration.setType("1");
-            String[] strings=line.split(" ");
-            registration.setUsername(strings[0]);
-            registration.setPassword(strings[1]);
-            pushClient.sendData(JSON.toJSONString(registration));
-        }
+        Object[] objects=new Object[8];
+        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+        theUnsafe.setAccessible(true);
+        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+        Class oc=Object[].class;
+        int os=unsafe.arrayIndexScale(oc);
+        int obase=unsafe.arrayBaseOffset(oc);
+        int sshift=31-Integer.numberOfLeadingZeros(os);
+        int i=1;
+        int index=(i<<sshift)+obase;
+        Object tmp=unsafe.getObjectVolatile(objects,index);
+        System.out.println("test ends");
+    }
+    public static void get(){
+        LinkedHashMap linkedHashMap=null;
     }
 
 }

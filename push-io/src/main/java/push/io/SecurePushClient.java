@@ -3,6 +3,7 @@ package push.io;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -81,7 +82,10 @@ public class SecurePushClient {
 
                 group = new NioEventLoopGroup();
                 b = new Bootstrap();
-                b.group(group).channel(NioSocketChannel.class).handler(spci);
+                b.group(group)
+                        .channel(NioSocketChannel.class)
+                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,15000)
+                        .handler(spci);
                 // Start the connection attempt.
             }
             ch = b.connect(host, port).sync().channel();

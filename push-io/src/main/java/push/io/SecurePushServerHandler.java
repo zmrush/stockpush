@@ -43,7 +43,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     }
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        logger.debug("receive connect and channle is active now:"+ctx.name());
+        logger.debug("channle is active now,address is:"+ctx.channel().remoteAddress());
         ConnectionEvent ce=new ConnectionEvent();
         ce.setChc(ctx);
         ce.setCet(ConnectionEvent.ConnectionEventType.CONNECTION_TRANSIENT);

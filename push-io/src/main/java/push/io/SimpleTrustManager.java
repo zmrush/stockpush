@@ -15,6 +15,10 @@ public class SimpleTrustManager implements X509TrustManager {
 
     public void checkServerTrusted(X509Certificate[] x509Certificates,
                                    String s) throws CertificateException {
+        for(X509Certificate x509Certificate:x509Certificates){
+            System.out.println(x509Certificate.getSubjectDN().getName());
+        }
+        System.out.println("server trusted");
 
     }
 
