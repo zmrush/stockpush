@@ -100,7 +100,7 @@ public class PushServer {
                 builder2.setType(Entity.Type.MESSAGE);
                 //--------------------------------------------------------
                 GroupMessage groupMessage=JSON.parseObject(content, GroupMessage.class);
-                //2浠ｈ〃缇ゅ彂娑堟伅
+                //群发消息
                 if(groupMessage.getType().equals(SendMessageEnum.SENDMESSAGE_TYPE.getType())){
                     if("0".equals(groupMessage.getMessageType())){
                         try {
@@ -129,7 +129,7 @@ public class PushServer {
         }
     }
 
-    //鍏憡绫绘帹閫�
+    //群发，广播
     public void publish(int nodeId,String message,String messageType) throws Exception{
         GroupMessage groupMessage=new GroupMessage();
         groupMessage.setNodeid(nodeId);
@@ -139,7 +139,7 @@ public class PushServer {
         try {
             int count = saveMessageDao.saveMessage(groupMessage);
             if(count ==1){
-                logger.info("娑堟伅淇濆瓨鎴愬姛,姝ｅ湪鎺ㄩ�涓�..");
+                logger.info("消息保存成功,正在推送中...");
                 broadCast(JSON.toJSONString(groupMessage));
             }
         } catch (Exception e) {
@@ -148,7 +148,7 @@ public class PushServer {
         }
     }
 
-    //娉ㄥ唽鐢ㄦ埛
+    //注册用户
     public boolean registUser(String uid,String password) throws Exception{
         Registration registration = new Registration();
         registration.setUsername(uid);
@@ -164,12 +164,12 @@ public class PushServer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("缃戠粶寮傚父,娉ㄥ唽鐢ㄦ埛澶辫触",e);
+            logger.error("网络异常,注册用户失败",e);
             return false;
         }
     }
 
-    //鍒涘缓鑺傜偣
+    //创建节点
     public boolean createNode(String nodeName,String description,String nodeType) throws Exception {
         NodeBean nodeBean =new NodeBean();
         nodeBean.setNodeName(nodeName);
@@ -186,12 +186,12 @@ public class PushServer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("缃戠粶寮傚父,鍒涘缓鑺傜偣澶辫触",e);
+            logger.error("网络异常,创建节点成功!",e);
             return false;
         }
     }
 
-    //鍒犻櫎鑺傜偣
+    //删除节点
     public boolean deleteNode(String nodeName) throws Exception{
         NodeBean nodeBean =new NodeBean();
         nodeBean.setNodeName(nodeName);
@@ -205,7 +205,7 @@ public class PushServer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("缃戠粶寮傚父,鍒犻櫎鑺傜偣澶辫触",e);
+            logger.error("网络异常,删除节点失败!",e);
             return false;
         }
 
