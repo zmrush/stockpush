@@ -22,6 +22,7 @@ public class PushClient {
 
     private static Logger logger= LoggerFactory.getLogger(PushClient.class);
 
+
     private SecurePushClient securePushClient;
     private String uid;
     private ScheduledExecutorService scheduledExecutorService= Executors.newScheduledThreadPool(1, new ThreadFactory() {
@@ -91,6 +92,49 @@ public class PushClient {
         }
     }
 
+    public boolean registUser(String uid,String password) throws Exception{
+        boolean registFlag ;
+        Registration registration = new Registration();
+        registration.setUsername(uid);
+        registration.setPassword(password);
+        registration.setType(SendMessageEnum.REGIST_TYPE.getType());
+        try {
+            this.sendDataSync(JSON.toJSONString(registration),UUID.randomUUID().toString());
+        } catch (Exception e) {
+            logger.error("regist user error!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean createNode(String nodeName,String description,String nodeType) throws Exception {
+        NodeBean nodeBean =new NodeBean();
+        nodeBean.setNodeName(nodeName);
+        nodeBean.setDescription(description);
+        nodeBean.setNodeType(nodeType);
+        nodeBean.setType(SendMessageEnum.CREATENODE_TYPE.getType());//创建节点
+        try {
+            this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
+        } catch (Exception e) {
+            logger.error("create node error", e);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteNode(String nodeName) throws Exception{
+        NodeBean nodeBean =new NodeBean();
+        nodeBean.setNodeName(nodeName);
+        nodeBean.setType(SendMessageEnum.DELATENODE_TYPE.getType());//删除节点
+        try {
+            this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
+        } catch (Exception e) {
+            logger.error("delete node error", e);
+            return false;
+        }
+        return true;
+    }
+
     public boolean subscribeNode(String uid,String nodeId) throws Exception{
         SubscribeBean subscribeBean =new SubscribeBean();
         subscribeBean.setUid(uid);
@@ -106,6 +150,7 @@ public class PushClient {
     }
 
     public boolean unSubscribe(String uid,String nodeId) throws Exception{
+        boolean unSubscribeFlag;
         SubscribeBean subscribeBean =new SubscribeBean();
         subscribeBean.setUid(uid);
         subscribeBean.setNodeId(Integer.parseInt(nodeId));
@@ -132,6 +177,21 @@ public class PushClient {
         }
 
         Thread.currentThread().sleep(10000000);
+        Object[] objects=new Object[8];
+        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+        theUnsafe.setAccessible(true);
+        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+        Class oc=Object[].class;
+        int os=unsafe.arrayIndexScale(oc);
+        int obase=unsafe.arrayBaseOffset(oc);
+        int sshift=31-Integer.numberOfLeadingZeros(os);
+        int i=1;
+        int index=(i<<sshift)+obase;
+        Object tmp=unsafe.getObjectVolatile(objects,index);
+        System.out.println("test ends");
+    }
+    public static void get(){
+        LinkedHashMap linkedHashMap=null;
     }
 
 }

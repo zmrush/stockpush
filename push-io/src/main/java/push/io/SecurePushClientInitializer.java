@@ -43,21 +43,6 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         eventManager.addListener(messageListener);
     }
 
-    class SimpleTrustManager implements X509TrustManager {
-        public void checkClientTrusted(X509Certificate[] x509Certificates,
-                                       String s) throws CertificateException {
-
-        }
-
-        public void checkServerTrusted(X509Certificate[] x509Certificates,
-                                       String s) throws CertificateException {
-
-        }
-
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
-    }
 
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
@@ -68,6 +53,7 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         //pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
         SSLEngine sslEngine=sslContext.createSSLEngine(spc.host,spc.port);
         sslEngine.setUseClientMode(true);
+        //sslEngine.setEnabledCipherSuites(new String[]{"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"});
         pipeline.addLast(new SslHandler(sslEngine));
         //------------------------------------------------------------------------------
         // On top of the SSL handler, add the text line codec.

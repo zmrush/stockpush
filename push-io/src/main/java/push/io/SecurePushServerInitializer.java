@@ -35,7 +35,7 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
     }
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
-        logger.debug("receive connect and initialize channel");
+        logger.debug("initialize channel,remote address is:"+ch.remoteAddress());
         ChannelPipeline pipeline = ch.pipeline();
         // Add SSL handler first to encrypt and decrypt everything.
         // In this example, we use a bogus certificate in the server side
@@ -46,6 +46,18 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         //------------------------------------------------------------------------------
         //pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         SSLEngine sslEngine=sslContext.createSSLEngine();
+        //------------------------------------------------------
+//        System.out.println("lslsljs;lgj");
+//        String[] suits2=sslEngine.getSupportedCipherSuites();
+//        for(String suit:suits2){
+//            System.out.println(suit);
+//        }
+//        sslEngine.setEnabledCipherSuites(new String[]{"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"});
+//        String[] suits=sslEngine.getEnabledCipherSuites();
+//        for(String suit:suits){
+//            System.out.println(suit);
+//        }
+        //------------------------------------------------------
         sslEngine.setUseClientMode(false);
         sslEngine.setWantClientAuth(true);
         pipeline.addLast(new SslHandler(sslEngine));
