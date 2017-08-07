@@ -1,5 +1,6 @@
 package push.io;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
@@ -8,7 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.model.message.Entity;
 import push.registry.EventManager;
-
+//well,只有我们加了这个注解才能够在多个pipeline中共用这个handler
+@ChannelHandler.Sharable
 public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.BaseEntity> {
     private static Logger logger= LoggerFactory.getLogger(SecurePushServerHandler.class);
     private  final EventManager<ConnectionEvent> eventManager;

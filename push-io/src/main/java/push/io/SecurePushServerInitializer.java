@@ -78,7 +78,7 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast(new ProtobufEncoder());
         //pipeline.addLast(spsh);
         //pipeline.addLast(new SecurePushServerHandler(eventManager));
-        //我们可以使用一个handler来处理所有的东西啊
+        //我们可以使用一个handler来处理所有的东西，当且晋档这个handelr有个@Sharable的注解
         pipeline.addLast(securePushServerHandler);
     }
     public void addListener(ConnectionListener connectionListner){
