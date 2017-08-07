@@ -15,7 +15,7 @@
     <bean id="dsConfig" class="push.datasource.DataSourceConfig">
         <property name="type" value="HikariCP"/>
         <property name="driver" value="${jdbc.driver}"/>
-        <property name="url" value="jdbc:mysql://10.100.141.39:3306/tm_dte"/>
+        <property name="url" value="${jdbc.url}"/>
         <property name="user" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
         <property name="maxPoolSize" value="${jdbc.maxActive}"/>

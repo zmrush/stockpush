@@ -3,6 +3,7 @@ package push.bottom;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.bottom.dao.SubscribeDao;
 import push.bottom.message.SubscribeBean;
 import push.io.MessageEvent;
 import push.io.MessageListener;
@@ -15,6 +16,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -26,7 +28,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PushClient {
 
     private static Logger logger= LoggerFactory.getLogger(PushClient.class);
-
 
     private SecurePushClient securePushClient;
     private String uid;
@@ -112,33 +113,6 @@ public class PushClient {
         return true;
     }
 
-    public boolean createNode(String nodeName,String description,String nodeType) throws Exception {
-        NodeBean nodeBean =new NodeBean();
-        nodeBean.setNodeName(nodeName);
-        nodeBean.setDescription(description);
-        nodeBean.setNodeType(nodeType);
-        nodeBean.setType(SendMessageEnum.CREATENODE_TYPE.getType());//创建节点
-        try {
-            this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
-        } catch (Exception e) {
-            logger.error("create node error", e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean deleteNode(String nodeName) throws Exception{
-        NodeBean nodeBean =new NodeBean();
-        nodeBean.setNodeName(nodeName);
-        nodeBean.setType(SendMessageEnum.DELATENODE_TYPE.getType());//删除节点
-        try {
-            this.sendDataSync(JSON.toJSONString(nodeBean),UUID.randomUUID().toString());
-        } catch (Exception e) {
-            logger.error("delete node error", e);
-            return false;
-        }
-        return true;
-    }
 
     public boolean subscribeNode(String uid,String nodeId) throws Exception{
         SubscribeBean subscribeBean =new SubscribeBean();

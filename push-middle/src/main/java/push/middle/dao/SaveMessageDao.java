@@ -21,7 +21,7 @@ public class SaveMessageDao extends AbstractDao {
         super(dataSource);
     }
 
-    public static final String CREATE_MESSAGE_SQL = "insert into push_message(nodeId,payload,publisher,createtime) values (?,?,?,now())";
+    public static final String CREATE_MESSAGE_SQL = "insert into push_message(nodeId,payload,createtime) values (?,?,now())";
 
 
     public int saveMessage(final GroupMessage groupMessage) throws Exception{

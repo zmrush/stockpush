@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import push.middle.dao.NodeDao;
 import push.middle.dao.SaveMessageDao;
 import push.middle.dao.UserDao;
@@ -48,6 +49,7 @@ public class PushServer {
     }
     public PushServer(){
     }
+
     public void start() throws Exception{
         try{
             InputStream is=PushClient.class.getClassLoader().getResourceAsStream("push.properties");
@@ -260,8 +262,11 @@ public class PushServer {
 
 
     public static void main(String[] args) throws Exception{
-        PushServer pushServer=new PushServer();
-        pushServer.start();
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring-*.xml");
+        ctx.registerShutdownHook();
+        //PushServer pushServer=new PushServer();
+        //pushServer.start();
+        PushServer pushServer=(PushServer)ctx.getBean("pushServer");
         Thread.currentThread().sleep(5000);
         for(;;){
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
@@ -272,7 +277,7 @@ public class PushServer {
             groupMessage.setMessage(lines[1]);
             groupMessage.setMessageType(lines[2]);
             pushServer.publish(groupMessage.getNodeid(),groupMessage.getMessage(),groupMessage.getMessageType());
-            pushServer.broadCast(JSON.toJSONString(groupMessage));
+            //pushServer.broadCast(JSON.toJSONString(groupMessage));
         }
 
 
