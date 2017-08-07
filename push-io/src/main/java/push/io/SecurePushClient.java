@@ -13,6 +13,9 @@ import push.model.message.Entity;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -130,6 +133,15 @@ public class SecurePushClient {
             group.shutdownGracefully();
     }
     public static void main(String[] args) throws Exception {
+        ScheduledExecutorService scheduledExecutorService= Executors.newScheduledThreadPool(1);
+        SecurePushClient securePushClient=new SecurePushClient("127.0.0.1",8877,scheduledExecutorService,"","");
+        securePushClient.start();
+        String line;
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        while((line=br.readLine())!=null){
+            logger.error("send data->"+line);
+            securePushClient.sendData("","",line);
+        }
 //        final String HOST = System.getProperty("host", "127.0.0.1");
 //        final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 //        // Configure SSL.

@@ -27,11 +27,13 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
     //private final SslContext sslCtx;
     private final SSLContext sslContext;
     private ExtensionRegistry registry;
+    private SecurePushServerHandler securePushServerHandler;
     public SecurePushServerInitializer(SSLContext sslCtx) {
         this.sslContext = sslCtx;
         eventManager.start();
         registry = ExtensionRegistry.newInstance();
         Entity.registerAllExtensions(registry);
+        securePushServerHandler=new SecurePushServerHandler(eventManager);
     }
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
@@ -74,10 +76,10 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast(new ProtobufDecoder(Entity.BaseEntity.getDefaultInstance(),registry));
         pipeline.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(new ProtobufEncoder());
-
-        // 不同的socketchannel不能共用一个securepushserverhandler，因此下面的写法不对，只能适用new的方式来生成新的handler
         //pipeline.addLast(spsh);
-        pipeline.addLast(new SecurePushServerHandler(eventManager));
+        //pipeline.addLast(new SecurePushServerHandler(eventManager));
+        //我们可以使用一个handler来处理所有的东西啊
+        pipeline.addLast(securePushServerHandler);
     }
     public void addListener(ConnectionListener connectionListner){
         eventManager.addListener(connectionListner);

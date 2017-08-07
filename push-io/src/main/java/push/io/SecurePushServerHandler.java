@@ -63,6 +63,7 @@ public class SecurePushServerHandler extends SimpleChannelInboundHandler<Entity.
     public void channelRead0(ChannelHandlerContext ctx, Entity.BaseEntity msg) throws Exception {
         if(msg.getType()==Entity.Type.PING){
             //这段代码只是为了提前结束判断
+            logger.error("receive ping");
             ctx.writeAndFlush(pingReplyEntity);
         }else if(msg.getType()==Entity.Type.MESSAGE){
             Entity.Message message=msg.getExtension(Entity.message);

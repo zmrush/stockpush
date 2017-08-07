@@ -50,10 +50,8 @@ public class SecurePushClientInitializer extends ChannelInitializer<SocketChanne
         int rd=(int)(30*Math.random());
         pipeline.addLast("timeout", new IdleStateHandler(200, 180, 150+rd, TimeUnit.SECONDS));
         //------------------------------------------------------------------------------
-        //pipeline.addLast(sslCtx.newHandler(ch.alloc(), spc.host, spc.port));
         SSLEngine sslEngine=sslContext.createSSLEngine(spc.host,spc.port);
         sslEngine.setUseClientMode(true);
-        //sslEngine.setEnabledCipherSuites(new String[]{"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"});
         pipeline.addLast(new SslHandler(sslEngine));
         //------------------------------------------------------------------------------
         // On top of the SSL handler, add the text line codec.

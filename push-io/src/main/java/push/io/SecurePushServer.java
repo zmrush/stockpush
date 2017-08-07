@@ -158,6 +158,16 @@ public final class SecurePushServer {
         spsi.addListener(connectionListener);
     }
     public static void main(String[] args) throws Exception {
+        SecurePushServer securePushServer=new SecurePushServer(8877);
+        securePushServer.start();
+        securePushServer.addListener(new ConnectionListener() {
+            public void onEvent(ConnectionEvent event) {
+                if(event.getCet().equals(ConnectionEvent.ConnectionEventType.MESSAGE_TRANSFER)){
+                    logger.error("receive ->:"+event.getMessage().toString());
+                }
+            }
+        });
+        Thread.currentThread().sleep(123434556);
 //        SelfSignedCertificate ssc = new SelfSignedCertificate();
 //        SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
 //            .build();
