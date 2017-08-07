@@ -36,4 +36,7 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
+    <bean id="messageDao" class="push.bottom.dao.MessageDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
 </beans>

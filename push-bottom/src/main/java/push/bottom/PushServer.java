@@ -12,6 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import push.bottom.dao.MessageDao;
 import push.bottom.dao.SubscribeDao;
 import push.bottom.dao.UserDao;
 import push.bottom.message.SubscribeBean;
@@ -40,6 +41,7 @@ public class PushServer {
     private UserDao userDao;
     private SubscribeDao subscribeDao;
     private NodeDao nodeDao;
+    private MessageDao messageDao;
 
     public NodeDao getNodeDao() {
         return nodeDao;
@@ -62,6 +64,14 @@ public class PushServer {
     }
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public MessageDao getMessageDao() {
+        return messageDao;
+    }
+
+    public void setMessageDao(MessageDao messageDao) {
+        this.messageDao = messageDao;
     }
     //------------------------------------------------------------------------
 
@@ -178,6 +188,13 @@ public class PushServer {
                         }else{
                             //如果该节点的set存在，那么把这个用户添加进去
                             sets.add(event.getChc());
+                        }
+
+                        //如果节点类型是0,则发送最后一条消息
+                        if("0".equals(nodeList.get(i).getType())){
+                            GroupMessage groupMessage = messageDao.queryLastMessageByNodeid(nodeList.get(i).getNodeId());
+                            ChannelHandlerContext chc=event.getChc();
+                            chc.writeAndFlush(groupMessage.getMessage());
                         }
                     }
                 }catch (Exception e){
@@ -393,6 +410,7 @@ public class PushServer {
 
 
     }
+
     public void start() throws Exception{
         try {
             //监听客户端
@@ -411,6 +429,10 @@ public class PushServer {
     public static void main(String[] args){
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring-*.xml");
         ctx.registerShutdownHook();
+        final PushServer pushServer=(PushServer)ctx.getBean("pushServer");
+        final PushClient pushClient=new PushClient();
+
+
         logger.info("Push Server started");
         logger.info("java.library.path=" + System.getProperty("java.library.path"));
     }

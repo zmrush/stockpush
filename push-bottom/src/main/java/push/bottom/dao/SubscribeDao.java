@@ -68,7 +68,7 @@ public class SubscribeDao extends AbstractDao {
     }
 
     /**
-     * 根据uid查询用户订阅所以节点id
+     * 根据uid查询用户订阅所有节点id
      * @param uid
      * @return
      * @throws Exception
