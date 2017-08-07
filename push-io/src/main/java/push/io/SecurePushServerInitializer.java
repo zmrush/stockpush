@@ -28,10 +28,14 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
     private final SSLContext sslContext;
     private ExtensionRegistry registry;
     private SecurePushServerHandler securePushServerHandler;
+    private ProtobufDecoder protobufDecoder;
+    private ProtobufEncoder protobufEncoder;
     public SecurePushServerInitializer(SSLContext sslCtx) {
         this.sslContext = sslCtx;
         eventManager.start();
         registry = ExtensionRegistry.newInstance();
+        protobufDecoder=new ProtobufDecoder(Entity.BaseEntity.getDefaultInstance(),registry);
+        protobufEncoder=new ProtobufEncoder();
         Entity.registerAllExtensions(registry);
         securePushServerHandler=new SecurePushServerHandler(eventManager);
     }
@@ -39,27 +43,7 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
     public void initChannel(SocketChannel ch) throws Exception {
         logger.debug("initialize channel,remote address is:"+ch.remoteAddress());
         ChannelPipeline pipeline = ch.pipeline();
-        // Add SSL handler first to encrypt and decrypt everything.
-        // In this example, we use a bogus certificate in the server side
-        // and accept any invalid certificates in the client side.
-        // You will need something more complicated to identify both
-        // and server in the real world.
-
-        //------------------------------------------------------------------------------
-        //pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         SSLEngine sslEngine=sslContext.createSSLEngine();
-        //------------------------------------------------------
-//        System.out.println("lslsljs;lgj");
-//        String[] suits2=sslEngine.getSupportedCipherSuites();
-//        for(String suit:suits2){
-//            System.out.println(suit);
-//        }
-//        sslEngine.setEnabledCipherSuites(new String[]{"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"});
-//        String[] suits=sslEngine.getEnabledCipherSuites();
-//        for(String suit:suits){
-//            System.out.println(suit);
-//        }
-        //------------------------------------------------------
         sslEngine.setUseClientMode(false);
         sslEngine.setWantClientAuth(true);
         pipeline.addLast(new SslHandler(sslEngine));
@@ -73,9 +57,9 @@ public class SecurePushServerInitializer extends ChannelInitializer<SocketChanne
 //        Entity.registerAllExtensions(registry);
         //pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
         pipeline.addLast("frameDecoder", new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(new ProtobufDecoder(Entity.BaseEntity.getDefaultInstance(),registry));
+        pipeline.addLast(protobufDecoder);
         pipeline.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());
-        pipeline.addLast(new ProtobufEncoder());
+        pipeline.addLast(protobufEncoder);
         //pipeline.addLast(spsh);
         //pipeline.addLast(new SecurePushServerHandler(eventManager));
         //我们可以使用一个handler来处理所有的东西，当且晋档这个handelr有个@Sharable的注解
