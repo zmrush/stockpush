@@ -18,6 +18,7 @@
         <module>push-user</module>
         <module>push-bottom</module>
         <module>push-datasource</module>
+        <module>push-io-udp</module>
     </modules>
     <packaging>pom</packaging>
 

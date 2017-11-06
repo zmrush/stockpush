@@ -16,6 +16,7 @@ import push.registry.EventManager;
 import push.model.message.Entity;
 
 import javax.net.ssl.*;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.TimeUnit;
 
 /**
