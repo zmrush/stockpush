@@ -7,6 +7,7 @@ import push.datasource.DaoUtil;
 import push.datasource.XDataSource;
 import push.model.dao.AbstractDao;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -17,7 +18,7 @@ public class UserDao extends AbstractDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
 
-    public UserDao(XDataSource dataSource){
+    public UserDao(DataSource dataSource){
         super(dataSource);
     }
 

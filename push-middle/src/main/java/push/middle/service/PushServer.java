@@ -1,15 +1,16 @@
-package push.middle;
+package push.middle.service;
 
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import push.middle.dao.NodeDao;
+import push.common.dao.NodeDao;
+import push.common.pojo.NodeBean;
+import push.common.pojo.Registration;
+import push.common.service.MiddleServerClient;
 import push.middle.dao.SaveMessageDao;
 import push.middle.dao.UserDao;
-import push.middle.pojo.NodeBean;
-import push.middle.pojo.Registration;
 import push.model.message.GroupMessage;
 import push.io.ConnectionEvent;
 import push.io.ConnectionListener;
@@ -52,7 +53,7 @@ public class PushServer {
 
     public void start() throws Exception{
         try{
-            InputStream is=PushClient.class.getClassLoader().getResourceAsStream("push.properties");
+            InputStream is=MiddleServerClient.class.getClassLoader().getResourceAsStream("push.properties");
             Properties properties=new Properties();
             properties.load(is);
             String url=properties.getProperty("url");

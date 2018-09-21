@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--注意文件名称不是logback.xml，想使用spring扩展profile支持，要以logback-spring.xml命名-->
+<configuration>
+
+    <springProperty scope="context" name="logging.path" source="logging.path"/>
+    <springProperty scope="context" name="logging.level" source="logging.level.com.antfinancial.antchain"/>
+    <springProperty scope="context" name="logging.hibernate.level" source="logging.hibernate.level"/>
+    <springProperty scope="context" name="spring.log.accesskeyid" source="spring.log.accesskeyid"/>
+    <springProperty scope="context" name="spring.log.accesskeysecret" source="spring.log.accesskeysecret"/>
+    <springProperty scope="context" name="spring.log.endpoint" source="spring.log.endpoint"/>
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <!-- 可用来获取StatusManager中的状态 -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+    <!-- 按照每天生成日志文件 -->
+    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <!-- 过滤器，只记录 error 级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>warn</level>
+        </filter>
+        <!-- 日志名称 -->
+        <file>${logging.path}/mychain/baas-data-error.log</file>
+        <!-- 每天生成一个日志文件，保存30天的日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名:按天回滚 daily -->
+            <FileNamePattern>${logging.path}/mychain/baas-data-error.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 编码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="ROOT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>${logging.level}</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${logging.path}/mychain/baas-data.log</file>
+        <!-- 每天生成一个日志文件，保存30天的日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名:按天回滚 daily -->
+            <FileNamePattern>${logging.path}/mychain/baas-data.log.%d{yyyy-MM-dd}
+            </FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 编码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <springProfile name="prod">
+        <appender name="Loghub" class="com.aliyun.openservices.log.logback.LoghubAppender">
+            <!-- Required parameters -->
+            <!-- Configure account and network  -->
+            <endpoint>${spring.log.endpoint}</endpoint>
+            <accessKeyId>${spring.log.accesskeyid}</accessKeyId>
+            <accessKey>${spring.log.accesskeysecret}</accessKey>
+
+            <!-- Configure sls -->
+            <projectName>baas-admin</projectName>
+            <logstore>baas-data</logstore>
+            <!-- Required parameters(end) -->
+
+            <!-- Optional parameters -->
+            <topic>baas-data</topic>
+
+            <!-- Optional parameters -->
+            <packageTimeoutInMS>3000</packageTimeoutInMS>
+            <logsCountPerPackage>4096</logsCountPerPackage>
+            <logsBytesPerPackage>3145728</logsBytesPerPackage>
+            <memPoolSizeInByte>104857600</memPoolSizeInByte>
+            <retryTimes>3</retryTimes>
+            <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 打印WARN,ERROR级别的日志 -->
+                <level>WARN</level>
+            </filter>
+        </appender>
+    </springProfile>
+
+
+    <logger name="org.hibernate.SQL" level="${logging.hibernate.level}" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROOT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+    <logger name="com.zaxxer.hikari.pool.PoolBase" level="${logging.hibernate.level}" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROOT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="com.zaxxer.hikari.pool.HikariPool" level="${logging.hibernate.level}" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROOT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+
+    <springProfile name="dev">
+        <root level="${logging.level}">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </root>
+        <logger name="com.antfinancial.antchain.baas" level="${logging.level}" additivity="false">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </logger>
+    </springProfile>
+    <springProfile name="test">
+        <root level="${logging.level}">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+            <appender-ref ref="Loghub"/>
+        </root>
+        <logger name="com.antfinancial.antchain.baas" level="${logging.level}" additivity="false">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+            <appender-ref ref="Loghub"/>
+        </logger>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="${logging.level}">
+            <appender-ref ref="STDOUT"/>:q
+
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+            <appender-ref ref="Loghub"/>
+        </root>
+        <logger name="com.antfinancial.antchain.baas" level="${logging.level}" additivity="false">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ROOT-APPENDER"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+            <appender-ref ref="Loghub"/>
+        </logger>
+    </springProfile>
+
+
+</configuration>

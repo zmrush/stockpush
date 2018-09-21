@@ -1,4 +1,4 @@
-package push.middle.pojo;
+package push.common.pojo;
 
 import push.model.message.AbstractMessage;
 

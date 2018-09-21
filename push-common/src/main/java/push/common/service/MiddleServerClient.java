@@ -1,4 +1,4 @@
-package push.middle;
+package push.common.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by mingzhu7 on 2017/1/4.
  */
-public class PushClient {
-    private static Logger logger= LoggerFactory.getLogger(PushClient.class);
+public class MiddleServerClient {
+    private static Logger logger= LoggerFactory.getLogger(MiddleServerClient.class);
     private String uid;
     private String password;
     private static EventManager<MessageEvent> messageEventEventManager=new EventManager<MessageEvent>("push-middle-client-manager");
@@ -35,12 +35,12 @@ public class PushClient {
 
         }
     }
-    public PushClient(){
+    public MiddleServerClient(){
 
     }
     public void start() throws Exception{
         try{
-            InputStream is=PushClient.class.getClassLoader().getResourceAsStream("push.properties");
+            InputStream is=MiddleServerClient.class.getClassLoader().getResourceAsStream("push.properties");
             Properties properties=new Properties();
             properties.load(is);
             String url=properties.getProperty("url");
@@ -144,7 +144,7 @@ public class PushClient {
 
 
     public static void main(String[] args) throws Exception{
-        PushClient pushClient=new PushClient();
+        MiddleServerClient pushClient=new MiddleServerClient();
 
         pushClient.start();
         Thread.currentThread().sleep(3000);

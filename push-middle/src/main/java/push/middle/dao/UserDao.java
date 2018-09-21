@@ -3,11 +3,11 @@ package push.middle.dao;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.common.pojo.Registration;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
 import push.datasource.DataSourceFactory;
 import push.datasource.XDataSource;
-import push.middle.pojo.Registration;
 import push.model.dao.AbstractDao;
 
 import java.sql.PreparedStatement;

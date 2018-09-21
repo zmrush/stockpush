@@ -36,7 +36,7 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <bean id="nodeDao" class="push.middle.dao.NodeDao">
+    <bean id="nodeDao" class="push.common.dao.NodeDao">
         <constructor-arg ref="dataSource"/>
     </bean>
 

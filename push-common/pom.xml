@@ -11,5 +11,36 @@
 
     <artifactId>push-common</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>rush</groupId>
+            <artifactId>push-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>rush</groupId>
+            <artifactId>push-datasource</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>rush</groupId>
+            <artifactId>push-io</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>rush</groupId>
+            <artifactId>push-zookeeper-registry</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.24</version>
+        </dependency>
+    </dependencies>
 
 </project>

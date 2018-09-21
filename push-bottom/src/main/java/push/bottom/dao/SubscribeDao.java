@@ -1,14 +1,14 @@
 package push.bottom.dao;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import push.bottom.message.SubscribeBean;
+import push.common.pojo.NodeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
 import push.datasource.DataSourceFactory;
 import push.datasource.XDataSource;
-import push.middle.pojo.NodeBean;
+
 import push.model.dao.AbstractDao;
 
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class SubscribeDao extends AbstractDao {
                 }
             });
             return count;
-        }catch (MySQLIntegrityConstraintViolationException e){
+        }catch (Constraint e){
             logger.info("该用户"+subscribeBean.getUid()+"已经订阅过节点id:"+subscribeBean.getNodeId());
             return 1;
         }

@@ -1,20 +1,17 @@
-package push.middle.dao;
+package push.common.dao;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import push.common.pojo.NodeBean;
 import push.datasource.DaoUtil;
 import push.datasource.DataSourceConfig;
 import push.datasource.DataSourceFactory;
 import push.datasource.XDataSource;
-import push.middle.pojo.NodeBean;
 import push.model.dao.AbstractDao;
 
 import java.sql.PreparedStatement;
 
-/**
- * Created by lizheng on 2017/2/17.
- */
 public class NodeDao extends AbstractDao {
     private static final Logger logger= LoggerFactory.getLogger(NodeDao.class);
 

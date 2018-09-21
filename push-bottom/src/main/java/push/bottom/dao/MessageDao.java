@@ -7,6 +7,7 @@ import push.datasource.XDataSource;
 import push.model.dao.AbstractDao;
 import push.model.message.GroupMessage;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -15,7 +16,7 @@ import java.sql.ResultSet;
  */
 public class MessageDao extends AbstractDao {
     private static final Logger logger = LoggerFactory.getLogger(MessageDao.class);
-    public MessageDao(XDataSource dataSource){
+    public MessageDao(DataSource dataSource){
 
         super(dataSource);
     }
